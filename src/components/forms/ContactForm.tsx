@@ -35,7 +35,7 @@ const contactFormSchema = z.object({
     .trim()
     .email({ message: 'Please enter a valid email address' })
     .max(255, { message: 'Email must be less than 255 characters' }),
-  projectType: z.enum(['editorial', 'commercial', 'personal'], {
+  projectType: z.enum(['web-development', 'security', 'consultation'], {
     required_error: 'Please select a project type',
   }),
   message: z
@@ -119,7 +119,7 @@ export function ContactForm() {
           animate={{ scale: 1 }}
           transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
         >
-          <CheckCircle2 className="size-16 mx-auto text-green-600 dark:text-green-400" />
+          <CheckCircle2 className="size-16 mx-auto text-primary" />
         </motion.div>
         <h3 className="text-2xl font-light tracking-wide">Message Sent!</h3>
         <p className="text-muted-foreground font-light leading-relaxed">
@@ -191,14 +191,14 @@ export function ContactForm() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent className="bg-popover z-50">
-                  <SelectItem value="editorial" className="font-light">
-                    Editorial
+                  <SelectItem value="web-development" className="font-light">
+                    Web Development
                   </SelectItem>
-                  <SelectItem value="commercial" className="font-light">
-                    Commercial
+                  <SelectItem value="security" className="font-light">
+                    Security Research
                   </SelectItem>
-                  <SelectItem value="personal" className="font-light">
-                    Personal
+                  <SelectItem value="consultation" className="font-light">
+                    Consultation
                   </SelectItem>
                 </SelectContent>
               </Select>

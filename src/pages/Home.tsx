@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { photographerInfo } from '@/data/photographer';
+import { developerInfo } from '@/data/developer';
 import { getFeaturedProjects } from '@/data/projects';
 import { ProjectCard } from '@/components/portfolio/ProjectCard';
 import { ScrollIndicator } from '@/components/ui/ScrollIndicator';
@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 
 /**
  * Homepage with immersive hero section and featured projects grid
- * Showcases photographer's best work with minimal, elegant design
+ * Showcases developer's best work with minimal, elegant design
  */
 export default function Home() {
   const featuredProjects = getFeaturedProjects();
@@ -53,12 +53,12 @@ export default function Home() {
             transition={{ duration: 1, ease: "easeOut" }}
           >
             <motion.h1
-              className="text-6xl md:text-8xl lg:text-9xl font-extralight tracking-widest text-white"
+              className="text-6xl md:text-8xl lg:text-9xl font-extralight tracking-widest text-primary"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.2 }}
             >
-              {photographerInfo.name.toUpperCase()}
+              {developerInfo.name.toUpperCase()}
             </motion.h1>
             
             <motion.p
@@ -67,7 +67,7 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.4 }}
             >
-              {photographerInfo.tagline}
+              {developerInfo.tagline}
             </motion.p>
 
             <motion.p
@@ -76,7 +76,7 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.6 }}
             >
-              {photographerInfo.heroIntroduction}
+              {developerInfo.heroIntroduction}
             </motion.p>
           </motion.div>
 
@@ -102,7 +102,7 @@ export default function Home() {
             </h2>
             <div className="space-y-4 text-lg font-light leading-relaxed text-muted-foreground">
               <p>
-                {photographerInfo.biography.split('\n\n')[0]}
+                {developerInfo.biography.split('\n\n')[0]}
               </p>
             </div>
                 <Link

@@ -4,7 +4,7 @@ import { SEOHead } from '@/components/seo/SEOHead';
 import { motion } from 'framer-motion';
 
 /**
- * Portfolio page with masonry grid
+ * Portfolio page with project grid
  * Features smooth animations and responsive layout
  */
 export default function Portfolio() {
@@ -13,7 +13,7 @@ export default function Portfolio() {
     <>
       <SEOHead 
         title="Portfolio"
-        description="Browse my complete photography portfolio featuring portraits, landscapes, editorial work, architecture, and documentary projects."
+        description="Browse my complete project portfolio featuring web applications, security tools, automation scripts, and open-source contributions."
       />
       
       <div className="min-h-screen">
@@ -29,7 +29,7 @@ export default function Portfolio() {
               Portfolio
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground font-light tracking-wide max-w-2xl mx-auto">
-              A curated collection of photography spanning diverse subjects and styles
+              A curated collection of projects spanning web development, security, and automation
             </p>
           </motion.div>
         </div>

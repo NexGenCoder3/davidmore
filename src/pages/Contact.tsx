@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin } from 'lucide-react';
-import { photographerInfo } from '@/data/photographer';
+import { developerInfo } from '@/data/developer';
 import { ContactForm } from '@/components/forms/ContactForm';
 import { Separator } from '@/components/ui/separator';
 import { SEOHead } from '@/components/seo/SEOHead';
@@ -14,7 +14,7 @@ export default function Contact() {
     <>
       <SEOHead
         title="Contact"
-        description={`Get in touch with ${photographerInfo.name} for photography inquiries, collaborations, and project bookings. ${photographerInfo.availability}`}
+        description={`Get in touch with ${developerInfo.name} for development projects, security consulting, and collaborations. ${developerInfo.availability}`}
       />
       
       <div className="min-h-screen">
@@ -52,7 +52,7 @@ export default function Contact() {
                   Send a Message
                 </h2>
                 <p className="text-muted-foreground font-light">
-                  Fill out the form below and I'll get back to you within 24-48 hours. {photographerInfo.availability}
+                  Fill out the form below and I'll get back to you within 24-48 hours. {developerInfo.availability}
                 </p>
               </div>
 
@@ -89,10 +89,10 @@ export default function Contact() {
                       Email
                     </p>
                     <a
-                      href={`mailto:${photographerInfo.email}`}
+                      href={`mailto:${developerInfo.email}`}
                       className="text-base md:text-lg font-light hover:text-muted-foreground transition-colors"
                     >
-                      {photographerInfo.email}
+                      {developerInfo.email}
                     </a>
                   </div>
                 </div>
@@ -107,10 +107,10 @@ export default function Contact() {
                       Phone
                     </p>
                     <a
-                      href={`tel:${photographerInfo.phone}`}
+                      href={`tel:${developerInfo.phone}`}
                       className="text-base md:text-lg font-light hover:text-muted-foreground transition-colors"
                     >
-                      {photographerInfo.phone}
+                      {developerInfo.phone}
                     </a>
                   </div>
                 </div>
@@ -125,7 +125,7 @@ export default function Contact() {
                       Location
                     </p>
                     <p className="text-base md:text-lg font-light">
-                      {photographerInfo.location}
+                      {developerInfo.location}
                     </p>
                   </div>
                 </div>

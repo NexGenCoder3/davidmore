@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Calendar, MapPin, Camera, User } from 'lucide-react';
+import { Calendar, MapPin, Code, User } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
@@ -107,13 +107,13 @@ export default function ProjectDetail() {
 
           {/* Technical Details */}
           <div className="grid md:grid-cols-2 gap-6 pt-4">
-            {project.camera && (
+            {project.tech && (
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-sm font-light tracking-wide uppercase text-muted-foreground">
-                  <Camera className="size-4" />
-                  <span>Camera</span>
+                  <Code className="size-4" />
+                  <span>Tech Stack</span>
                 </div>
-                <p className="font-light text-foreground">{project.camera}</p>
+                <p className="font-light text-foreground">{project.tech}</p>
               </div>
             )}
             {project.client && (
