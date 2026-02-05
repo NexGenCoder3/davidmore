@@ -6,7 +6,7 @@ import { useScrollPosition } from '@/hooks/useScrollPosition';
 import { ThemeToggle } from './ThemeToggle';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { photographerInfo } from '@/data/photographer';
+import { developerInfo } from '@/data/developer';
 import { cn } from '@/lib/utils';
 
 const navLinks = [
@@ -58,7 +58,7 @@ export function Header() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              {photographerInfo.name.toUpperCase()}
+              {developerInfo.name.toUpperCase()}
             </motion.span>
           </Link>
 

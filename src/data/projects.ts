@@ -3,16 +3,16 @@ import type { Project } from '@/types';
 export const projects: Project[] = [
   {
     id: '1',
-    title: 'Desert Solitude',
-    category: 'landscapes',
+    title: 'SecureAuth Framework',
+    category: 'security',
     year: '2024',
-    slug: 'desert-solitude',
+    slug: 'secure-auth-framework',
     // Photo by Zain Creations on Unsplash
     coverImage: 'https://images.unsplash.com/photo-1733496637708-9470e9c8cfe2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NjB8&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'An exploration of the stark beauty and quiet majesty of the American Southwest. This series captures the interplay of light, shadow, and ancient geological formations that define the desert landscape.',
-    client: 'National Geographic',
-    camera: 'Hasselblad X2D 100C',
-    location: 'Arizona & Utah',
+    description: 'A comprehensive authentication framework with JWT tokens, OAuth2 integration, and advanced security features including rate limiting and brute force protection.',
+    client: 'Open Source',
+    tech: 'Node.js, TypeScript, Redis',
+    location: 'Remote',
     images: [
       {
         id: '1-1',
@@ -46,16 +46,16 @@ export const projects: Project[] = [
   },
   {
     id: '2',
-    title: 'Urban Portraits',
-    category: 'portraits',
+    title: 'NetScanner Pro',
+    category: 'tools',
     year: '2024',
-    slug: 'urban-portraits',
+    slug: 'netscanner-pro',
     // Photo by Bradley Andrews on Unsplash
     coverImage: 'https://images.unsplash.com/photo-1761069234906-a7c77124f641?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NjJ8&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'A portrait series celebrating the diversity and character of city dwellers. Each subject was photographed in their favorite urban location, revealing the intimate connection between people and their environment.',
-    client: 'The New York Times Magazine',
-    camera: 'Canon EOS R5',
-    location: 'New York City',
+    description: 'Advanced network scanning and vulnerability assessment tool with real-time monitoring, port scanning, and automated reporting capabilities.',
+    client: 'Security Firms',
+    tech: 'Python, Scapy, Nmap API',
+    location: 'Global',
     images: [
       {
         id: '2-1',
@@ -89,16 +89,16 @@ export const projects: Project[] = [
   },
   {
     id: '3',
-    title: 'Architectural Visions',
-    category: 'architecture',
+    title: 'CloudDeploy CLI',
+    category: 'automation',
     year: '2023',
-    slug: 'architectural-visions',
+    slug: 'clouddeploy-cli',
     // Photo by E Vos on Unsplash
     coverImage: 'https://images.unsplash.com/photo-1758543437543-6d61ca0fd530?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NjR8&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'Modern architecture captured through a minimalist lens. This series focuses on geometric forms, materiality, and the interplay of structure with natural light.',
-    client: 'Architectural Digest',
-    camera: 'Sony A7R V',
-    location: 'International',
+    description: 'A powerful CLI tool for automating cloud deployments across AWS, GCP, and Azure with infrastructure-as-code support and rollback capabilities.',
+    client: 'Enterprise',
+    tech: 'Go, Terraform, Docker',
+    location: 'Remote',
     images: [
       {
         id: '3-1',
@@ -132,16 +132,16 @@ export const projects: Project[] = [
   },
   {
     id: '4',
-    title: 'Fashion Forward',
-    category: 'editorial',
+    title: 'ReactFlow Dashboard',
+    category: 'web-apps',
     year: '2023',
-    slug: 'fashion-forward',
+    slug: 'reactflow-dashboard',
     // Photo by Yigit ARISOY on Unsplash
     coverImage: 'https://images.unsplash.com/photo-1682232568244-edbb92614c2a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NjZ8&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'An editorial series exploring contemporary fashion through bold compositions and dramatic lighting. Shot on location and in studio.',
-    client: 'Vogue',
-    camera: 'Phase One XF IQ4',
-    location: 'New York & Paris',
+    description: 'A modern analytics dashboard built with React and TypeScript featuring real-time data visualization, dark mode, and responsive design.',
+    client: 'SaaS Startups',
+    tech: 'React, TypeScript, D3.js',
+    location: 'Remote',
     images: [
       {
         id: '4-1',
@@ -175,16 +175,16 @@ export const projects: Project[] = [
   },
   {
     id: '5',
-    title: 'Mountain Stories',
-    category: 'documentary',
+    title: 'CryptoVault',
+    category: 'security',
     year: '2023',
-    slug: 'mountain-stories',
+    slug: 'cryptovault',
     // Photo by Eva Šumah on Unsplash
     coverImage: 'https://images.unsplash.com/photo-1742260765447-239ed006350a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1Njh8&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'Documentary series following mountain communities and their relationship with the changing alpine environment. A year-long project documenting life at altitude.',
+    description: 'End-to-end encrypted password manager with zero-knowledge architecture, biometric authentication, and secure sharing capabilities.',
     client: 'Personal Project',
-    camera: 'Fujifilm GFX 100 II',
-    location: 'Swiss Alps',
+    tech: 'Rust, WebAssembly, AES-256',
+    location: 'Open Source',
     images: [
       {
         id: '5-1',
@@ -218,15 +218,15 @@ export const projects: Project[] = [
   },
   {
     id: '6',
-    title: 'Coastal Light',
-    category: 'landscapes',
+    title: 'API Gateway',
+    category: 'open-source',
     year: '2022',
-    slug: 'coastal-light',
+    slug: 'api-gateway',
     // Photo by Max Kukurudziak on Unsplash
     coverImage: 'https://images.unsplash.com/photo-1669908752972-e04c3b65e855?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1Njl8&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'The ever-changing mood of the coastline captured through different seasons and weather conditions. A meditation on light, water, and time.',
+    description: 'High-performance API gateway with rate limiting, load balancing, and request transformation capabilities. Handles millions of requests per day.',
     location: 'Pacific Northwest',
-    camera: 'Nikon Z9',
+    tech: 'Go, Redis, PostgreSQL',
     images: [
       {
         id: '6-1',
@@ -260,16 +260,16 @@ export const projects: Project[] = [
   },
   {
     id: '7',
-    title: 'Studio Sessions',
-    category: 'portraits',
+    title: 'DevOps Toolkit',
+    category: 'automation',
     year: '2022',
-    slug: 'studio-sessions',
+    slug: 'devops-toolkit',
     // Photo by Kyle Loftus on Unsplash
     coverImage: 'https://images.unsplash.com/photo-1616267624976-b45d3a7bac73?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NzF8&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'Controlled studio portraiture emphasizing form, light, and expression. Classic approach to contemporary subjects.',
-    client: 'Various Editorial',
-    camera: 'Hasselblad H6D-100c',
-    location: 'New York Studio',
+    description: 'Comprehensive DevOps automation toolkit with CI/CD pipelines, monitoring dashboards, and infrastructure management scripts.',
+    client: 'Tech Startups',
+    tech: 'Bash, Python, Kubernetes',
+    location: 'Remote',
     images: [
       {
         id: '7-1',
@@ -303,16 +303,16 @@ export const projects: Project[] = [
   },
   {
     id: '8',
-    title: 'City Lights',
-    category: 'editorial',
+    title: 'Real-time Chat',
+    category: 'web-apps',
     year: '2022',
-    slug: 'city-lights',
+    slug: 'realtime-chat',
     // Photo by Michael Wu on Unsplash
     coverImage: 'https://images.unsplash.com/photo-1582210413269-f0bf6d13f58f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NzN8&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'Urban nightscapes and the electric energy of city life after dark. Long exposures and ambient light create a dreamlike quality.',
-    client: 'Adobe Creative Cloud',
-    camera: 'Sony A7S III',
-    location: 'Tokyo & New York',
+    description: 'Scalable real-time chat application with WebSocket support, message encryption, file sharing, and multi-room capabilities.',
+    client: 'Enterprise',
+    tech: 'Node.js, Socket.io, MongoDB',
+    location: 'Global',
     images: [
       {
         id: '8-1',
