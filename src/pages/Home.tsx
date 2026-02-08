@@ -5,8 +5,10 @@ import { ProjectCard } from '@/components/portfolio/ProjectCard';
 import { ScrollIndicator } from '@/components/ui/ScrollIndicator';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { SEOHead } from '@/components/seo/SEOHead';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Terminal } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { MatrixRain } from '@/components/effects/MatrixRain';
+import { TypingEffect } from '@/components/effects/TypingEffect';
 
 /**
  * Homepage with immersive hero section and featured projects grid
@@ -19,78 +21,115 @@ export default function Home() {
     <>
       <SEOHead />
       
-      <div className="min-h-screen">
-        {/* Hero Section - Full viewport with featured image */}
-      <section className="relative h-screen w-full overflow-hidden">
-        {/* Background Video */}
-        <div className="absolute inset-0">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            poster="https://images.pexels.com/videos/2675516/free-video-2675516.jpg?auto=compress&cs=tinysrgb&fit=crop&h=630&w=1200"
-            className="w-full h-full object-cover"
-            onError={(e) => {
-              const target = e.currentTarget;
-              target.style.opacity = '0';
-            }}
-          >
-            <source src="https://videos.pexels.com/video-files/2675516/2675516-sd_960_540_24fps.mp4" type="video/mp4" />
-          </video>
-          {/* Video from Pexels */}
-          {/* Gradient Overlay for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60" />
-        </div>
+      {/* Matrix Rain Background */}
+      <MatrixRain />
 
-        {/* Hero Content */}
-        <div className="relative h-full flex flex-col items-center justify-center px-6">
-          <motion.div
-            className="text-center space-y-6 max-w-4xl"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: "easeOut" }}
-          >
-            <motion.h1
-              className="text-6xl md:text-8xl lg:text-9xl font-extralight tracking-widest text-primary"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.2 }}
-            >
-              {developerInfo.name.toUpperCase()}
-            </motion.h1>
-            
-            <motion.p
-              className="text-xl md:text-2xl font-light tracking-wide text-white/90"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.4 }}
-            >
-              {developerInfo.tagline}
-            </motion.p>
+      <div className="min-h-screen relative z-10">
+        {/* Hero Section - Terminal Style */}
+        <section className="relative h-screen w-full overflow-hidden bg-black/90">
+          {/* Scanline effect */}
+          <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.1)_50%)] bg-[length:100%_4px] z-10" />
+          
+          {/* Grid pattern overlay */}
+          <div className="absolute inset-0 opacity-10" style={{
+            backgroundImage: `
+              linear-gradient(rgba(34, 197, 94, 0.3) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(34, 197, 94, 0.3) 1px, transparent 1px)
+            `,
+            backgroundSize: '50px 50px'
+          }} />
 
-            <motion.p
-              className="text-base md:text-lg font-light leading-relaxed text-white/80 max-w-2xl mx-auto"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.6 }}
+          {/* Hero Content */}
+          <div className="relative h-full flex flex-col items-center justify-center px-6">
+            {/* Terminal Window */}
+            <motion.div
+              className="w-full max-w-4xl bg-black/80 border border-primary/30 rounded-lg overflow-hidden shadow-[0_0_50px_rgba(34,197,94,0.3)]"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
             >
-              {developerInfo.heroIntroduction}
-            </motion.p>
-          </motion.div>
+              {/* Terminal Header */}
+              <div className="flex items-center gap-2 px-4 py-3 bg-primary/10 border-b border-primary/20">
+                <div className="flex gap-2">
+                  <div className="w-3 h-3 rounded-full bg-destructive/80" />
+                  <div className="w-3 h-3 rounded-full bg-amber" />
+                  <div className="w-3 h-3 rounded-full bg-primary/80" />
+                </div>
+                <div className="flex-1 text-center">
+                  <span className="text-primary/60 text-sm font-mono">terminal@david-more:~</span>
+                </div>
+                <Terminal className="w-4 h-4 text-primary/60" />
+              </div>
 
-          {/* Scroll Indicator */}
-          <motion.div
-            className="absolute bottom-12"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.2, duration: 0.8 }}
-          >
-            <ScrollIndicator />
-          </motion.div>
-        </div>
-      </section>
+              {/* Terminal Content */}
+              <div className="p-6 md:p-8 font-mono space-y-4">
+                <div className="text-primary/60 text-sm">
+                  <span className="text-primary">$</span> whoami
+                </div>
+                
+                <motion.h1
+                  className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-primary drop-shadow-[0_0_10px_rgba(34,197,94,0.5)]"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                >
+                  <TypingEffect 
+                    text={developerInfo.name.toUpperCase()} 
+                    speed={100}
+                    delay={500}
+                  />
+                </motion.h1>
+                
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 1.5 }}
+                  className="space-y-2"
+                >
+                  <div className="text-primary/60 text-sm">
+                    <span className="text-primary">$</span> cat role.txt
+                  </div>
+                  <p className="text-xl md:text-2xl text-primary/90">
+                    {developerInfo.tagline}
+                  </p>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 2 }}
+                  className="space-y-2"
+                >
+                  <div className="text-primary/60 text-sm">
+                    <span className="text-primary">$</span> cat mission.txt
+                  </div>
+                  <p className="text-base md:text-lg text-primary/70 max-w-2xl">
+                    {developerInfo.heroIntroduction}
+                  </p>
+                </motion.div>
+
+                <motion.div
+                  className="pt-4 text-primary/40 text-sm"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 2.5 }}
+                >
+                  <span className="text-primary">$</span> <span className="animate-pulse">█</span>
+                </motion.div>
+              </div>
+            </motion.div>
+
+            {/* Scroll Indicator */}
+            <motion.div
+              className="absolute bottom-12"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 3, duration: 0.8 }}
+            >
+              <ScrollIndicator />
+            </motion.div>
+          </div>
+        </section>
 
         {/* Introduction Section */}
         <section className="py-24 md:py-32 px-6 lg:px-8 bg-background">

@@ -6,8 +6,8 @@ All colors MUST be HSL.
 */
 
 :root {
-  --background: hsl(120 5% 98%);
-  --foreground: hsl(120 10% 8%);
+  --background: hsl(142 76% 36%);
+  --foreground: hsl(0 0% 100%);
   --card: hsl(120 5% 98%);
   --card-foreground: hsl(120 10% 8%);
   --popover: hsl(120 5% 98%);
@@ -60,10 +60,13 @@ All colors MUST be HSL.
   --hacker-green-glow: hsl(142 90% 55%);
   --hacker-green-dim: hsl(142 50% 35%);
   --terminal-bg: hsl(120 15% 8%);
+  
+  /* Warning/Amber color for design tokens */
+  --amber: hsl(38 92% 50%);
 }
 
 .dark {
-  --background: hsl(120 15% 4%);
+  --background: hsl(142 76% 20%);
   --foreground: hsl(0 0% 98%);
   --card: hsl(120 15% 6%);
   --card-foreground: hsl(0 0% 98%);
@@ -166,6 +169,9 @@ All colors MUST be HSL.
   --color-background-100: var(--ds-background-100);
   --shadow-focus-ring: var(--ds-focus-ring);
   --shadow-border-small: var(--ds-shadow-border-small);
+  
+  /* Amber color token */
+  --color-amber: var(--amber);
 
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
