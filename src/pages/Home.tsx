@@ -9,6 +9,8 @@ import { ArrowRight, Terminal } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { MatrixRain } from '@/components/effects/MatrixRain';
 import { TypingEffect } from '@/components/effects/TypingEffect';
+import { GlitchText } from '@/components/effects/GlitchText';
+import { CodeProjectCard } from '@/components/portfolio/CodeProjectCard';
 
 /**
  * Homepage with immersive hero section and featured projects grid
@@ -67,18 +69,18 @@ export default function Home() {
                   <span className="text-primary">$</span> whoami
                 </div>
                 
-                <motion.h1
+                <motion.div
                   className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-primary drop-shadow-[0_0_10px_rgba(34,197,94,0.5)]"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.5, delay: 0.3 }}
                 >
-                  <TypingEffect 
+                  <GlitchText 
                     text={developerInfo.name.toUpperCase()} 
-                    speed={100}
-                    delay={500}
+                    as="h1"
+                    glitchIntensity="medium"
                   />
-                </motion.h1>
+                </motion.div>
                 
                 <motion.div
                   initial={{ opacity: 0 }}
@@ -170,14 +172,12 @@ export default function Home() {
             </div>
           </ScrollReveal>
 
-          {/* Projects Grid - Edge to edge with minimal gaps */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
+          {/* Projects Grid - Code-themed cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 px-4 md:px-8">
             {featuredProjects.map((project, index) => (
-              <ProjectCard
+              <CodeProjectCard
                 key={project.id}
                 project={project}
-                aspectRatio="landscape"
-                showCategory={true}
                 index={index}
               />
             ))}
