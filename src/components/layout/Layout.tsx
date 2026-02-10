@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Header } from './Header';
 import { Footer } from './Footer';
+import { CRTOverlay } from '@/components/effects/CRTOverlay';
 
 interface LayoutProps {
   children: ReactNode;
@@ -18,6 +19,7 @@ export function Layout({ children }: LayoutProps) {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <CRTOverlay />
       <Header />
       <main 
         id="main-content" 

@@ -1,5 +1,14 @@
 import type { Project } from '@/types';
 
+import secureAuthImg from '@/assets/projects/secure-auth-screenshot.jpg';
+import netscannerImg from '@/assets/projects/netscanner-screenshot.jpg';
+import clouddeployImg from '@/assets/projects/clouddeploy-screenshot.jpg';
+import reactflowImg from '@/assets/projects/reactflow-screenshot.jpg';
+import cryptovaultImg from '@/assets/projects/cryptovault-screenshot.jpg';
+import apiGatewayImg from '@/assets/projects/api-gateway-screenshot.jpg';
+import devopsImg from '@/assets/projects/devops-screenshot.jpg';
+import realtimeChatImg from '@/assets/projects/realtime-chat-screenshot.jpg';
+
 export const projects: Project[] = [
   {
     id: '1',
@@ -7,8 +16,7 @@ export const projects: Project[] = [
     category: 'security',
     year: '2024',
     slug: 'secure-auth-framework',
-    // Photo by Zain Creations on Unsplash
-    coverImage: 'https://images.unsplash.com/photo-1733496637708-9470e9c8cfe2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NjB8&ixlib=rb-4.1.0&q=80&w=1080',
+    coverImage: secureAuthImg,
     description: 'A comprehensive authentication framework with JWT tokens, OAuth2 integration, and advanced security features including rate limiting and brute force protection.',
     client: 'Open Source',
     tech: 'Node.js, TypeScript, Redis',
@@ -50,8 +58,7 @@ export const projects: Project[] = [
     category: 'tools',
     year: '2024',
     slug: 'netscanner-pro',
-    // Photo by Bradley Andrews on Unsplash
-    coverImage: 'https://images.unsplash.com/photo-1761069234906-a7c77124f641?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NjJ8&ixlib=rb-4.1.0&q=80&w=1080',
+    coverImage: netscannerImg,
     description: 'Advanced network scanning and vulnerability assessment tool with real-time monitoring, port scanning, and automated reporting capabilities.',
     client: 'Security Firms',
     tech: 'Python, Scapy, Nmap API',
@@ -93,8 +100,7 @@ export const projects: Project[] = [
     category: 'automation',
     year: '2023',
     slug: 'clouddeploy-cli',
-    // Photo by E Vos on Unsplash
-    coverImage: 'https://images.unsplash.com/photo-1758543437543-6d61ca0fd530?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NjR8&ixlib=rb-4.1.0&q=80&w=1080',
+    coverImage: clouddeployImg,
     description: 'A powerful CLI tool for automating cloud deployments across AWS, GCP, and Azure with infrastructure-as-code support and rollback capabilities.',
     client: 'Enterprise',
     tech: 'Go, Terraform, Docker',
@@ -136,8 +142,7 @@ export const projects: Project[] = [
     category: 'web-apps',
     year: '2023',
     slug: 'reactflow-dashboard',
-    // Photo by Yigit ARISOY on Unsplash
-    coverImage: 'https://images.unsplash.com/photo-1682232568244-edbb92614c2a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NjZ8&ixlib=rb-4.1.0&q=80&w=1080',
+    coverImage: reactflowImg,
     description: 'A modern analytics dashboard built with React and TypeScript featuring real-time data visualization, dark mode, and responsive design.',
     client: 'SaaS Startups',
     tech: 'React, TypeScript, D3.js',
@@ -179,8 +184,7 @@ export const projects: Project[] = [
     category: 'security',
     year: '2023',
     slug: 'cryptovault',
-    // Photo by Eva Šumah on Unsplash
-    coverImage: 'https://images.unsplash.com/photo-1742260765447-239ed006350a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1Njh8&ixlib=rb-4.1.0&q=80&w=1080',
+    coverImage: cryptovaultImg,
     description: 'End-to-end encrypted password manager with zero-knowledge architecture, biometric authentication, and secure sharing capabilities.',
     client: 'Personal Project',
     tech: 'Rust, WebAssembly, AES-256',
@@ -222,8 +226,7 @@ export const projects: Project[] = [
     category: 'open-source',
     year: '2022',
     slug: 'api-gateway',
-    // Photo by Max Kukurudziak on Unsplash
-    coverImage: 'https://images.unsplash.com/photo-1669908752972-e04c3b65e855?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1Njl8&ixlib=rb-4.1.0&q=80&w=1080',
+    coverImage: apiGatewayImg,
     description: 'High-performance API gateway with rate limiting, load balancing, and request transformation capabilities. Handles millions of requests per day.',
     location: 'Pacific Northwest',
     tech: 'Go, Redis, PostgreSQL',
@@ -264,8 +267,7 @@ export const projects: Project[] = [
     category: 'automation',
     year: '2022',
     slug: 'devops-toolkit',
-    // Photo by Kyle Loftus on Unsplash
-    coverImage: 'https://images.unsplash.com/photo-1616267624976-b45d3a7bac73?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NzF8&ixlib=rb-4.1.0&q=80&w=1080',
+    coverImage: devopsImg,
     description: 'Comprehensive DevOps automation toolkit with CI/CD pipelines, monitoring dashboards, and infrastructure management scripts.',
     client: 'Tech Startups',
     tech: 'Bash, Python, Kubernetes',
@@ -307,8 +309,7 @@ export const projects: Project[] = [
     category: 'web-apps',
     year: '2022',
     slug: 'realtime-chat',
-    // Photo by Michael Wu on Unsplash
-    coverImage: 'https://images.unsplash.com/photo-1582210413269-f0bf6d13f58f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NzN8&ixlib=rb-4.1.0&q=80&w=1080',
+    coverImage: realtimeChatImg,
     description: 'Scalable real-time chat application with WebSocket support, message encryption, file sharing, and multi-room capabilities.',
     client: 'Enterprise',
     tech: 'Node.js, Socket.io, MongoDB',

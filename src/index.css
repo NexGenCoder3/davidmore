@@ -219,3 +219,9 @@ All colors MUST be HSL.
     display: none;
   }
 }
+
+@keyframes crt-flicker {
+  0% { opacity: 0.015; }
+  50% { opacity: 0.03; }
+  100% { opacity: 0.015; }
+}
