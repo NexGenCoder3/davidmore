@@ -25,7 +25,7 @@
    education: 'Self-taught Developer & Security Researcher',
    location: 'Nigeria, LG',
    email: 'ekeledavid39@gmail.com',
-   phone: '+234 XXX XXX XXXX',
+   phone: '+234 8109419058',
    availability: 'Currently available for projects',
    socialLinks: {
      github: 'https://github.com/davidmore',
