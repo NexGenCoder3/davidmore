@@ -1,6 +1,7 @@
 import { Instagram, Linkedin } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { developerInfo } from '@/data/developer';
-import { Separator } from '@/components/ui/separator';
 
 function GithubIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -10,22 +11,52 @@ function GithubIcon(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-/**
- * Minimal footer component with social links and copyright
- */
+function formatUptime(seconds: number) {
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = seconds % 60;
+  if (h > 0) return `${h}h ${m}m ${s}s`;
+  if (m > 0) return `${m}m ${s}s`;
+  return `${s}s`;
+}
+
 export function Footer() {
   const currentYear = new Date().getFullYear();
+  const location = useLocation();
+  const [uptime, setUptime] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => setUptime(prev => prev + 1), 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const currentDir = location.pathname === '/' ? '~' : `~${location.pathname}`;
 
   return (
     <footer className="border-t border-border">
+      {/* Terminal Status Bar */}
+      <div className="bg-terminal-bg border-b border-hacker-green/20 px-6 lg:px-8 py-2 font-mono text-xs">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4 flex-wrap">
+          <div className="flex items-center gap-4 text-hacker-green/70">
+            <span className="text-hacker-green/50">guest@dm:</span>
+            <span>{currentDir}</span>
+          </div>
+          <div className="flex items-center gap-6 text-hacker-green/50">
+            <span>⏱ uptime: {formatUptime(uptime)}</span>
+            <span className="flex items-center gap-1.5">
+              <span className="size-2 rounded-full bg-hacker-green animate-pulse" />
+              SECURE
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Original footer content */}
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12">
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-          {/* Copyright */}
           <p className="text-sm text-muted-foreground font-light tracking-wide">
             © {currentYear} {developerInfo.name}. All rights reserved.
           </p>
-
-          {/* Social Links */}
           <div className="flex items-center gap-6">
             {developerInfo.socialLinks.github && (
               <a
