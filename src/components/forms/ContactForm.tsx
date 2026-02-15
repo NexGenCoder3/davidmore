@@ -69,8 +69,12 @@ export function ContactForm() {
     setIsSubmitting(true);
     
     try {
-      // Formspree integration - replace YOUR_FORM_ID with your actual form ID
-      const response = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
+      // Formspree integration - uses VITE_FORMSPREE_ID environment variable
+      const formspreeId = import.meta.env.VITE_FORMSPREE_ID;
+      if (!formspreeId) {
+        throw new Error('Contact form is not configured. Please set up VITE_FORMSPREE_ID.');
+      }
+      const response = await fetch(`https://formspree.io/f/${encodeURIComponent(formspreeId)}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
