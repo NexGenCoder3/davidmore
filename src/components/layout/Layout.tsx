@@ -7,6 +7,7 @@ import { CRTOverlay } from '@/components/effects/CRTOverlay';
 import { CommandTerminal } from '@/components/effects/CommandTerminal';
 import { CursorTrail } from '@/components/effects/CursorTrail';
 import { useKonamiCode } from '@/hooks/useKonamiCode';
+import { useAnalytics } from '@/hooks/useAnalytics';
 
 interface LayoutProps {
   children: ReactNode;
@@ -16,6 +17,7 @@ export function Layout({ children }: LayoutProps) {
   const location = useLocation();
   const isHomepage = location.pathname === '/';
   const { activated } = useKonamiCode();
+  useAnalytics();
 
   return (
     <div className="min-h-screen flex flex-col">

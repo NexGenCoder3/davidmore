@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { developerInfo } from '@/data/developer';
 import { getFeaturedProjects } from '@/data/projects';
+import { testimonials } from '@/data/testimonials';
 import { ProjectCard } from '@/components/portfolio/ProjectCard';
 import { ScrollIndicator } from '@/components/ui/ScrollIndicator';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
@@ -11,6 +12,7 @@ import { MatrixRain } from '@/components/effects/MatrixRain';
 import { TypingEffect } from '@/components/effects/TypingEffect';
 import { GlitchText } from '@/components/effects/GlitchText';
 import { CodeProjectCard } from '@/components/portfolio/CodeProjectCard';
+import { TestimonialCard } from '@/components/testimonials/TestimonialCard';
 
 /**
  * Homepage with immersive hero section and featured projects grid
@@ -195,6 +197,26 @@ export default function Home() {
               </Link>
             </div>
           </ScrollReveal>
+        </section>
+
+        {/* Testimonials Section */}
+        <section className="py-24 md:py-32 border-t border-border bg-terminal-bg">
+          <ScrollReveal>
+            <div className="text-center mb-16 space-y-4 px-6">
+              <h2 className="text-3xl md:text-4xl font-mono text-hacker-green-glow font-bold">
+                TESTIMONIALS
+              </h2>
+              <p className="text-hacker-green/50 font-mono text-sm">
+                $ cat /var/log/feedback.log
+              </p>
+            </div>
+          </ScrollReveal>
+
+          <div className="grid md:grid-cols-2 gap-4 px-4 md:px-8 max-w-5xl mx-auto">
+            {testimonials.map((t, i) => (
+              <TestimonialCard key={t.id} testimonial={t} delay={0.3 + i * 0.5} />
+            ))}
+          </div>
         </section>
       </div>
     </>

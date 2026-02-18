@@ -57,3 +57,54 @@ export interface ContactSubmission {
   message: string;
   timestamp: Date;
 }
+
+// Case Study fields for enhanced project detail
+export interface CaseStudy {
+  challenge: string;
+  approach: string;
+  features: string[];
+  results: string[];
+  codeSnippet?: { language: string; code: string; caption: string };
+  lessons: string[];
+}
+
+// Skills
+export type SkillCategory = 'Frontend' | 'Backend' | 'Security' | 'DevOps';
+
+export interface Skill {
+  name: string;
+  category: SkillCategory;
+  proficiency: number; // 0-100
+  relatedProjects: string[]; // project slugs
+}
+
+// Blog
+export type BlogCategory = 'Security' | 'Web Dev' | 'DevOps' | 'Tutorials';
+
+export interface BlogPost {
+  slug: string;
+  title: string;
+  category: BlogCategory;
+  date: string;
+  readingTime: number;
+  excerpt: string;
+  content: string; // markdown-like
+  tags: string[];
+}
+
+// Testimonials
+export interface Testimonial {
+  id: string;
+  name: string;
+  role: string;
+  relationship: string;
+  quote: string;
+}
+
+// Analytics
+export interface AnalyticsEvent {
+  page: string;
+  timestamp: number;
+  userAgent: string;
+  referrer: string;
+}

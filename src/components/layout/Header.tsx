@@ -13,6 +13,8 @@ import { AsciiLogo } from '@/components/effects/AsciiLogo';
 const navLinks = [
   { name: 'Home', path: '/' },
   { name: 'Portfolio', path: '/portfolio' },
+  { name: 'Skills', path: '/skills' },
+  { name: 'Blog', path: '/blog' },
   { name: 'About', path: '/about' },
   { name: 'Contact', path: '/contact' },
 ];
