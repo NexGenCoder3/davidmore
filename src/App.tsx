@@ -19,6 +19,12 @@ const Portfolio = lazy(() => import("./pages/Portfolio"));
 const ProjectDetail = lazy(() => import("./pages/ProjectDetail"));
 const About = lazy(() => import("./pages/About"));
 const Contact = lazy(() => import("./pages/Contact"));
+const Skills = lazy(() => import("./pages/Skills"));
+const Blog = lazy(() => import("./pages/Blog"));
+const BlogPost = lazy(() => import("./pages/BlogPost"));
+const Resume = lazy(() => import("./pages/Resume"));
+const Admin = lazy(() => import("./pages/Admin"));
+const Accessibility = lazy(() => import("./pages/Accessibility"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -66,6 +72,54 @@ function AnimatedRoutes() {
           element={
             <PageTransition>
               <Contact />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/skills"
+          element={
+            <PageTransition>
+              <Skills />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/blog"
+          element={
+            <PageTransition>
+              <Blog />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/blog/:slug"
+          element={
+            <PageTransition>
+              <BlogPost />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/resume"
+          element={
+            <PageTransition>
+              <Resume />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <PageTransition>
+              <Admin />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/accessibility"
+          element={
+            <PageTransition>
+              <Accessibility />
             </PageTransition>
           }
         />

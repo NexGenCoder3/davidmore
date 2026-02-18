@@ -9,9 +9,12 @@ const ROUTES: Record<string, string> = {
   portfolio: '/portfolio',
   about: '/about',
   contact: '/contact',
+  skills: '/skills',
+  blog: '/blog',
+  resume: '/resume',
 };
 
-const COMMANDS = ['cd', 'ls', 'help', 'whoami', 'clear', 'neofetch', 'history', 'cat', 'ping'];
+const COMMANDS = ['cd', 'ls', 'help', 'whoami', 'clear', 'neofetch', 'history', 'cat', 'ping', 'sudo'];
 
 interface HistoryEntry {
   command: string;
@@ -39,13 +42,14 @@ function getHelp() {
   return [
     'Available commands:',
     '',
-    '  cd <page>      Navigate to a page (home, about, portfolio, contact)',
+    '  cd <page>      Navigate to a page (home, about, portfolio, skills, blog, resume, contact)',
     '  cd ~ | cd /    Navigate to home',
     '  ls             List available pages',
     '  whoami         Display developer info',
     '  neofetch       System info display',
     '  cat about.txt  Show bio snippet',
     '  ping           Ping the server',
+    '  sudo admin     Access admin dashboard',
     '  history        Show command history',
     '  clear          Clear terminal',
     '  help           Show this help message',
@@ -133,6 +137,14 @@ export function CommandTerminal() {
         break;
       case 'ping':
         output = [`PING lovable.app (127.0.0.1): 56 bytes`, `64 bytes: time=${(Math.random() * 2).toFixed(2)}ms`, `--- ping complete ---`];
+        break;
+      case 'sudo':
+        if (args.toLowerCase() === 'admin') {
+          navigate('/admin');
+          output = ['[sudo] Access granted. Loading admin dashboard...'];
+        } else {
+          output = ['[sudo] Unknown command. Try: sudo admin'];
+        }
         break;
       default:
         output = [`bash: ${command}: command not found. Type "help" for available commands.`];

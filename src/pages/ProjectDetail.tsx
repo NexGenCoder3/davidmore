@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Calendar, MapPin, Code, User } from 'lucide-react';
+import { Calendar, MapPin, Code, User, Target, Lightbulb, CheckCircle, BookOpen } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { getProjectBySlug } from '@/data/projects';
+import { caseStudies } from '@/data/caseStudies';
 import { ImageWithLightbox } from '@/components/portfolio/ImageWithLightbox';
 import { Lightbox } from '@/components/portfolio/Lightbox';
 
@@ -128,6 +129,101 @@ export default function ProjectDetail() {
           </div>
         </motion.div>
       </section>
+
+      {/* Case Study Section */}
+      {caseStudies[project.slug] && (
+        <section className="max-w-4xl mx-auto px-6 lg:px-8 py-12 font-mono">
+          {(() => {
+            const cs = caseStudies[project.slug];
+            return (
+              <div className="space-y-10">
+                {/* Challenge */}
+                <ScrollReveal>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2 text-hacker-green-glow text-sm font-bold">
+                      <Target className="size-4" /> THE CHALLENGE
+                    </div>
+                    <p className="text-muted-foreground font-light font-sans">{cs.challenge}</p>
+                  </div>
+                </ScrollReveal>
+
+                {/* Approach */}
+                <ScrollReveal delay={0.1}>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2 text-hacker-green-glow text-sm font-bold">
+                      <Lightbulb className="size-4" /> THE APPROACH
+                    </div>
+                    <p className="text-muted-foreground font-light font-sans">{cs.approach}</p>
+                  </div>
+                </ScrollReveal>
+
+                {/* Key Features */}
+                <ScrollReveal delay={0.2}>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2 text-hacker-green-glow text-sm font-bold">
+                      <CheckCircle className="size-4" /> KEY FEATURES
+                    </div>
+                    <ul className="space-y-2">
+                      {cs.features.map((f, i) => (
+                        <li key={i} className="flex items-start gap-2 text-muted-foreground text-sm font-sans">
+                          <span className="text-hacker-green mt-1">▸</span> {f}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </ScrollReveal>
+
+                {/* Results */}
+                <ScrollReveal delay={0.3}>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2 text-hacker-green-glow text-sm font-bold">
+                      <Target className="size-4" /> RESULTS & IMPACT
+                    </div>
+                    <ul className="space-y-2">
+                      {cs.results.map((r, i) => (
+                        <li key={i} className="flex items-start gap-2 text-muted-foreground text-sm font-sans">
+                          <span className="text-hacker-green mt-1">✓</span> {r}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </ScrollReveal>
+
+                {/* Code Snippet */}
+                {cs.codeSnippet && (
+                  <ScrollReveal delay={0.4}>
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2 text-hacker-green-glow text-sm font-bold">
+                        <Code className="size-4" /> CODE SNIPPET
+                      </div>
+                      <p className="text-muted-foreground/60 text-xs">{cs.codeSnippet.caption}</p>
+                      <pre className="bg-terminal-bg border border-hacker-green/20 rounded-lg p-4 overflow-x-auto text-sm">
+                        <code className="text-hacker-green/80">{cs.codeSnippet.code}</code>
+                      </pre>
+                    </div>
+                  </ScrollReveal>
+                )}
+
+                {/* Lessons Learned */}
+                <ScrollReveal delay={0.5}>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2 text-hacker-green-glow text-sm font-bold">
+                      <BookOpen className="size-4" /> LESSONS LEARNED
+                    </div>
+                    <ul className="space-y-2">
+                      {cs.lessons.map((l, i) => (
+                        <li key={i} className="flex items-start gap-2 text-muted-foreground text-sm font-sans">
+                          <span className="text-hacker-green mt-1">→</span> {l}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </ScrollReveal>
+              </div>
+            );
+          })()}
+        </section>
+      )}
 
         {/* Image Gallery - Edge to edge */}
         <section className="py-12 md:py-16">
