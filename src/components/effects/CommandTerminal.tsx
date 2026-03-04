@@ -148,13 +148,50 @@ export function CommandTerminal() {
         if (sudoArgs === 'admin' || sudoArgs === 'analytics' || sudoArgs === 'dashboard') {
           navigate('/demo-analytics');
           output = ['[sudo] Access granted. Loading admin dashboard...'];
+        } else if (sudoArgs === 'reboot') {
+          output = [
+            '[sudo] Initiating system reboot...',
+            'Stopping services... ██████████ 100%',
+            'Flushing cache... done.',
+            'Unmounting /dev/portfolio... done.',
+            'Rebooting in 3... 2... 1...',
+            '',
+            '⚡ Just kidding. This is a website. We don\'t reboot.',
+          ];
+        } else if (sudoArgs === 'shutdown' || sudoArgs === 'poweroff') {
+          output = [
+            '[sudo] Broadcast message from root@dm-portfolio:',
+            '',
+            '  The system is going down for maintenance NOW!',
+            '  ...wait, you can\'t shut down a portfolio site.',
+            '  Nice try though. 😎',
+          ];
+        } else if (sudoArgs === 'rm -rf /' || sudoArgs === 'rm -rf /*') {
+          output = [
+            '[sudo] rm: refusing to obliterate portfolio',
+            'ERROR: Cannot delete. Too much talent stored here. 🔥',
+          ];
+        } else if (sudoArgs === 'make me a sandwich') {
+          output = ['🥪 Okay.'];
+        } else if (sudoArgs === 'hack' || sudoArgs === 'hack nasa') {
+          output = [
+            '[sudo] Connecting to mainframe...',
+            'ACCESS DENIED. FBI has been notified.',
+            '',
+            '...just kidding. But seriously, don\'t hack NASA.',
+          ];
         } else {
           output = [
             '[sudo] Usage: sudo <command>',
             '',
-            '  sudo admin        Open admin analytics dashboard',
-            '  sudo analytics    Open admin analytics dashboard',
-            '  sudo dashboard    Open admin analytics dashboard',
+            '  sudo admin              Open admin analytics dashboard',
+            '  sudo analytics          Open admin analytics dashboard',
+            '  sudo dashboard          Open admin analytics dashboard',
+            '  sudo reboot             Reboot the system',
+            '  sudo shutdown           Shut it all down',
+            '  sudo rm -rf /           Live dangerously',
+            '  sudo make me a sandwich You know the meme',
+            '  sudo hack               Try your luck',
           ];
         }
         break;
