@@ -117,7 +117,7 @@ function AdminDashboard() {
 export default function Admin() {
   return (
     <>
-      <SEOHead title="Admin Dashboard" description="Demo visitor analytics dashboard." />
+      <SEOHead title="Demo Analytics" description="Demo visitor analytics dashboard." noindex />
       <AdminDashboard />
     </>
   );

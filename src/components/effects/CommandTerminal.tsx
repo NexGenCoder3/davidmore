@@ -49,7 +49,7 @@ function getHelp() {
     '  neofetch       System info display',
     '  cat about.txt  Show bio snippet',
     '  ping           Ping the server',
-    '  sudo admin     Access admin dashboard',
+    '  analytics     View demo analytics dashboard',
     '  history        Show command history',
     '  clear          Clear terminal',
     '  help           Show this help message',
@@ -138,13 +138,13 @@ export function CommandTerminal() {
       case 'ping':
         output = [`PING lovable.app (127.0.0.1): 56 bytes`, `64 bytes: time=${(Math.random() * 2).toFixed(2)}ms`, `--- ping complete ---`];
         break;
+      case 'analytics':
+        navigate('/demo-analytics');
+        output = ['Loading demo analytics dashboard...'];
+        break;
+
       case 'sudo':
-        if (args.toLowerCase() === 'admin') {
-          navigate('/admin');
-          output = ['[sudo] Access granted. Loading admin dashboard...'];
-        } else {
-          output = ['[sudo] Unknown command. Try: sudo admin'];
-        }
+        output = ['[sudo] Permission denied. This is a portfolio demo site.'];
         break;
       default:
         output = [`bash: ${command}: command not found. Type "help" for available commands.`];

@@ -7,6 +7,7 @@ interface SEOHeadProps {
   description?: string;
   image?: string;
   type?: 'website' | 'article';
+  noindex?: boolean;
 }
 
 /**
@@ -18,7 +19,8 @@ export function SEOHead({
   description, 
   // Photo by Oyemike Princewill on Unsplash
   image = 'https://images.unsplash.com/photo-1662333085102-f6ae3be21c91?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NjB8&ixlib=rb-4.1.0&q=80&w=1080',
-  type = 'website'
+  type = 'website',
+  noindex = false
 }: SEOHeadProps) {
   const location = useLocation();
   
@@ -70,7 +72,11 @@ export function SEOHead({
     // Additional SEO tags
     updateMetaTag('author', developerInfo.name);
     updateMetaTag('keywords', `developer, hacker, security researcher, ${developerInfo.name}, full-stack developer, ${developerInfo.tagline}`);
-  }, [fullTitle, fullDescription, fullUrl, image, type]);
+    
+    if (noindex) {
+      updateMetaTag('robots', 'noindex, nofollow');
+    }
+  }, [fullTitle, fullDescription, fullUrl, image, type, noindex]);
 
   return null;
 }

@@ -108,7 +108,7 @@ function AnimatedRoutes() {
           }
         />
         <Route
-          path="/admin"
+          path="/demo-analytics"
           element={
             <PageTransition>
               <Admin />
