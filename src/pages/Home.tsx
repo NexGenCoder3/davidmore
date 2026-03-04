@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 import { MatrixRain } from '@/components/effects/MatrixRain';
 import { TypingEffect } from '@/components/effects/TypingEffect';
 import { GlitchText } from '@/components/effects/GlitchText';
-import { CodeProjectCard } from '@/components/portfolio/CodeProjectCard';
+import { MasonryGrid } from '@/components/portfolio/MasonryGrid';
 import { TestimonialCard } from '@/components/testimonials/TestimonialCard';
 
 /**
@@ -174,15 +174,9 @@ export default function Home() {
             </div>
           </ScrollReveal>
 
-          {/* Projects Grid - Code-themed cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 px-4 md:px-8">
-            {featuredProjects.map((project, index) => (
-              <CodeProjectCard
-                key={project.id}
-                project={project}
-                index={index}
-              />
-            ))}
+          {/* Projects Grid - Masonry layout */}
+          <div className="px-4 md:px-8">
+            <MasonryGrid projects={featuredProjects} />
           </div>
 
           {/* View All Link */}
