@@ -1,5 +1,5 @@
 import { projects } from '@/data/projects';
-import { PortfolioGrid } from '@/components/portfolio/PortfolioGrid';
+import { MasonryGrid } from '@/components/portfolio/MasonryGrid';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { motion } from 'framer-motion';
 
@@ -37,7 +37,7 @@ export default function Portfolio() {
 
       {/* Portfolio Grid - Edge to edge */}
       <section className="py-12 md:py-16 px-2 md:px-4">
-        <PortfolioGrid projects={projects} />
+        <MasonryGrid projects={projects} />
       </section>
 
         {/* Bottom spacing */}
