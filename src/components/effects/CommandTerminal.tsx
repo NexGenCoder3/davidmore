@@ -143,9 +143,22 @@ export function CommandTerminal() {
         output = ['Loading demo analytics dashboard...'];
         break;
 
-      case 'sudo':
-        output = ['[sudo] Permission denied. This is a portfolio demo site.'];
+      case 'sudo': {
+        const sudoArgs = args.toLowerCase();
+        if (sudoArgs === 'admin' || sudoArgs === 'analytics' || sudoArgs === 'dashboard') {
+          navigate('/demo-analytics');
+          output = ['[sudo] Access granted. Loading admin dashboard...'];
+        } else {
+          output = [
+            '[sudo] Usage: sudo <command>',
+            '',
+            '  sudo admin        Open admin analytics dashboard',
+            '  sudo analytics    Open admin analytics dashboard',
+            '  sudo dashboard    Open admin analytics dashboard',
+          ];
+        }
         break;
+      }
       default:
         output = [`bash: ${command}: command not found. Type "help" for available commands.`];
     }
