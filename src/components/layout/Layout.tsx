@@ -6,6 +6,9 @@ import { Footer } from './Footer';
 import { CRTOverlay } from '@/components/effects/CRTOverlay';
 import { CommandTerminal } from '@/components/effects/CommandTerminal';
 import { CursorTrail } from '@/components/effects/CursorTrail';
+import { GradientOrbs } from '@/components/effects/GradientOrbs';
+import { StatusWidget } from '@/components/effects/StatusWidget';
+import { ScrollProgress } from '@/components/ui/ScrollProgress';
 import { useKonamiCode } from '@/hooks/useKonamiCode';
 import { useAnalytics } from '@/hooks/useAnalytics';
 
@@ -21,8 +24,10 @@ export function Layout({ children }: LayoutProps) {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <ScrollProgress />
       <CRTOverlay />
       <CursorTrail />
+      <GradientOrbs />
       <Header />
       <main 
         id="main-content" 
@@ -33,6 +38,7 @@ export function Layout({ children }: LayoutProps) {
       </main>
       <Footer />
       <CommandTerminal />
+      <StatusWidget />
 
       {/* Konami Code Easter Egg */}
       <AnimatePresence>

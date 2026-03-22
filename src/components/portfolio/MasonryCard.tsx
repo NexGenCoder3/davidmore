@@ -26,7 +26,7 @@ export function MasonryCard({ project, index }: MasonryCardProps) {
   return (
     <Link
       to={`/project/${project.slug}`}
-      className="group block rounded-lg overflow-hidden bg-card border border-border hover:border-primary/30 transition-colors duration-300"
+      className="group block rounded-xl overflow-hidden bg-white/[0.03] backdrop-blur-xl backdrop-saturate-150 border border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.06)] hover:shadow-[0_16px_48px_rgba(34,197,94,0.15),inset_0_1px_0_rgba(255,255,255,0.1)] hover:border-white/[0.15] transition-all duration-500"
     >
       {/* Image */}
       <div className={cn('relative overflow-hidden bg-muted', getAspectRatio(index))}>
