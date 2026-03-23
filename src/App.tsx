@@ -12,6 +12,7 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { BootSequence } from "@/components/effects/BootSequence";
 import { AnimatePresence } from "framer-motion";
 import { lazy, Suspense, useState, useEffect } from "react";
+import { ScrollToTop } from "@/components/utils/ScrollToTop";
 
 // Code-split route components for better performance
 const Index = lazy(() => import("./pages/Index"));
@@ -158,6 +159,7 @@ const App = () => {
             <Sonner />
             {showBoot && <BootSequence onComplete={handleBootComplete} />}
             <BrowserRouter>
+              <ScrollToTop />
               <SkipToContent />
               <Layout>
                 <Suspense fallback={<LoadingFallback />}>
