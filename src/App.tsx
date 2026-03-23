@@ -158,6 +158,7 @@ const App = () => {
             <Sonner />
             {showBoot && <BootSequence onComplete={handleBootComplete} />}
             <BrowserRouter>
+              <ScrollToTop />
               <SkipToContent />
               <Layout>
                 <Suspense fallback={<LoadingFallback />}>
