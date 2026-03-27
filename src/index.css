@@ -6,24 +6,24 @@ All colors MUST be HSL.
 */
 
 :root {
-  --background: hsl(142 76% 36%);
-  --foreground: hsl(0 0% 100%);
-  --card: hsl(120 5% 98%);
-  --card-foreground: hsl(120 10% 8%);
-  --popover: hsl(120 5% 98%);
-  --popover-foreground: hsl(120 10% 8%);
+  --background: hsl(0 0% 100%);
+  --foreground: hsl(0 0% 9%);
+  --card: hsl(0 0% 98%);
+  --card-foreground: hsl(0 0% 9%);
+  --popover: hsl(0 0% 98%);
+  --popover-foreground: hsl(0 0% 9%);
   --primary: hsl(142 70% 45%);
   --primary-foreground: hsl(0 0% 100%);
-  --secondary: hsl(120 10% 92%);
-  --secondary-foreground: hsl(120 10% 15%);
-  --muted: hsl(120 5% 92%);
-  --muted-foreground: hsl(120 5% 45%);
-  --accent: hsl(142 50% 90%);
+  --secondary: hsl(0 0% 96%);
+  --secondary-foreground: hsl(0 0% 15%);
+  --muted: hsl(0 0% 96%);
+  --muted-foreground: hsl(0 0% 45%);
+  --accent: hsl(142 40% 95%);
   --accent-foreground: hsl(142 70% 25%);
   --destructive: hsl(0 84.2% 60.2%);
   --destructive-foreground: hsl(0 0% 98%);
-  --border: hsl(120 10% 88%);
-  --input: hsl(120 10% 88%);
+  --border: hsl(0 0% 90%);
+  --input: hsl(0 0% 90%);
   --ring: hsl(142 70% 45%);
   --radius: 0.5rem;
   --sidebar-background: hsl(120 5% 96%);
@@ -66,24 +66,24 @@ All colors MUST be HSL.
 }
 
 .dark {
-  --background: hsl(142 76% 20%);
+  --background: hsl(0 0% 4%);
   --foreground: hsl(0 0% 98%);
-  --card: hsl(120 15% 6%);
+  --card: hsl(0 0% 7%);
   --card-foreground: hsl(0 0% 98%);
-  --popover: hsl(120 15% 6%);
+  --popover: hsl(0 0% 7%);
   --popover-foreground: hsl(0 0% 98%);
   --primary: hsl(142 70% 50%);
-  --primary-foreground: hsl(120 15% 4%);
-  --secondary: hsl(120 10% 12%);
+  --primary-foreground: hsl(0 0% 4%);
+  --secondary: hsl(0 0% 12%);
   --secondary-foreground: hsl(0 0% 98%);
-  --muted: hsl(120 10% 12%);
-  --muted-foreground: hsl(142 20% 55%);
-  --accent: hsl(142 40% 15%);
+  --muted: hsl(0 0% 12%);
+  --muted-foreground: hsl(0 0% 55%);
+  --accent: hsl(142 30% 10%);
   --accent-foreground: hsl(142 70% 65%);
   --destructive: hsl(0 62.8% 30.6%);
   --destructive-foreground: hsl(0 0% 98%);
-  --border: hsl(120 10% 15%);
-  --input: hsl(120 10% 15%);
+  --border: hsl(0 0% 15%);
+  --input: hsl(0 0% 15%);
   --ring: hsl(142 70% 50%);
   --sidebar-background: hsl(120 15% 6%);
   --sidebar-foreground: hsl(142 30% 80%);
