@@ -3,10 +3,12 @@ import { useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Header } from './Header';
 import { Footer } from './Footer';
+import { BackNavigation } from './BackNavigation';
 import { CRTOverlay } from '@/components/effects/CRTOverlay';
 import { CommandTerminal } from '@/components/effects/CommandTerminal';
 import { CursorTrail } from '@/components/effects/CursorTrail';
 import { GradientOrbs } from '@/components/effects/GradientOrbs';
+import { NetworkGrid } from '@/components/effects/NetworkGrid';
 import { StatusWidget } from '@/components/effects/StatusWidget';
 import { ScrollProgress } from '@/components/ui/ScrollProgress';
 import { useKonamiCode } from '@/hooks/useKonamiCode';
@@ -28,12 +30,14 @@ export function Layout({ children }: LayoutProps) {
       <CRTOverlay />
       <CursorTrail />
       <GradientOrbs />
+      {!isHomepage && <NetworkGrid />}
       <Header />
       <main 
         id="main-content" 
         className={`flex-1 ${isHomepage ? '' : 'pt-16'}`}
         tabIndex={-1}
       >
+        {!isHomepage && <BackNavigation />}
         {children}
       </main>
       <Footer />
