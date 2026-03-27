@@ -2,6 +2,7 @@ import { Instagram, Linkedin } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { developerInfo } from '@/data/developer';
+import { MagneticButton } from '@/components/effects/MagneticButton';
 
 function GithubIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -59,26 +60,30 @@ export function Footer() {
           </p>
           <div className="flex items-center gap-6">
             {developerInfo.socialLinks.github && (
-              <a
-                href={developerInfo.socialLinks.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-                aria-label="GitHub"
-              >
-                <GithubIcon className="size-5" />
-              </a>
+              <MagneticButton strength={0.25}>
+                <a
+                  href={developerInfo.socialLinks.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  aria-label="GitHub"
+                >
+                  <GithubIcon className="size-5" />
+                </a>
+              </MagneticButton>
             )}
             {developerInfo.socialLinks.linkedin && (
-              <a
-                href={developerInfo.socialLinks.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-                aria-label="LinkedIn"
-              >
-                <Linkedin className="size-5" />
-              </a>
+              <MagneticButton strength={0.25}>
+                <a
+                  href={developerInfo.socialLinks.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  aria-label="LinkedIn"
+                >
+                  <Linkedin className="size-5" />
+                </a>
+              </MagneticButton>
             )}
           </div>
         </div>

@@ -9,6 +9,7 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { developerInfo } from '@/data/developer';
 import { cn } from '@/lib/utils';
 import { AsciiLogo } from '@/components/effects/AsciiLogo';
+import { MagneticButton } from '@/components/effects/MagneticButton';
 
 const navLinks = [
   { name: 'Home', path: '/' },
@@ -60,20 +61,21 @@ export function Header() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: 0.1 * index }}
                 >
-                  <Link
-                    to={link.path}
-                    className="relative text-lg leading-7 font-light tracking-wide text-white transition-colors duration-300 hover:text-white/80"
-                  >
-                    {link.name}
-                    {/* Active underline */}
-                    {location.pathname === link.path && (
-                      <motion.div
-                        layoutId="activeNav"
-                        className="absolute -bottom-1 left-0 right-0 h-px bg-white"
-                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                      />
-                    )}
-                  </Link>
+                  <MagneticButton strength={0.2}>
+                    <Link
+                      to={link.path}
+                      className="relative text-lg leading-7 font-light tracking-wide text-white transition-colors duration-300 hover:text-white/80"
+                    >
+                      {link.name}
+                      {location.pathname === link.path && (
+                        <motion.div
+                          layoutId="activeNav"
+                          className="absolute -bottom-1 left-0 right-0 h-px bg-white"
+                          transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                        />
+                      )}
+                    </Link>
+                  </MagneticButton>
                 </motion.div>
               ))}
             <motion.div
@@ -81,7 +83,9 @@ export function Header() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4, delay: 0.4 }}
             >
-              <ThemeToggle />
+              <MagneticButton strength={0.15}>
+                <ThemeToggle />
+              </MagneticButton>
             </motion.div>
           </nav>
 
