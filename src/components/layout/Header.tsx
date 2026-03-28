@@ -89,14 +89,14 @@ export function Header() {
               transition={{ duration: 0.4, delay: 0.4 }}
             >
               <MagneticButton strength={0.15}>
-                <ThemeToggle />
+                <ThemeToggle className={isTransparent ? 'text-white hover:bg-white/10' : ''} />
               </MagneticButton>
             </motion.div>
           </nav>
 
           {/* Mobile Menu */}
           <div className="md:hidden flex items-center gap-2">
-            <ThemeToggle />
+            <ThemeToggle className={isTransparent ? 'text-white hover:bg-white/10' : ''} />
             <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
               <SheetTrigger asChild>
                 <Button

@@ -29,12 +29,6 @@ function AdminDashboard() {
             <span className="inline-block w-2 h-2 rounded-full bg-hacker-green animate-pulse mr-1" />
             Live Analytics • Client-side tracking
           </p>
-          <div className="mt-3 border border-yellow-500/30 rounded-lg px-4 py-2 bg-yellow-500/5">
-            <p className="text-yellow-500/80 text-xs">
-              ⚠ DEMO MODE — This dashboard displays client-side analytics stored in your browser's localStorage. 
-              Data is local to each visitor and not shared. No sensitive information is exposed.
-            </p>
-          </div>
         </motion.div>
 
         {/* Stats Cards */}

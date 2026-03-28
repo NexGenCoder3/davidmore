@@ -61,7 +61,7 @@ export function PageTransition({ children }: PageTransitionProps) {
             animate={{ scaleX: 0 }}
             exit={{ scaleX: 1 }}
             transition={{
-              duration: 0.4,
+              duration: 0.5,
               delay: baseDelay,
               ease: [0.76, 0, 0.24, 1],
             }}

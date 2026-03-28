@@ -6,6 +6,7 @@ import { CategoryFilter } from '@/components/portfolio/CategoryFilter';
 import { StatsCounter } from '@/components/portfolio/StatsCounter';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { motion, AnimatePresence } from 'framer-motion';
+import { TypingEffect } from '@/components/effects/TypingEffect';
 
 const categories = [
   { id: 'all', label: 'All' },
@@ -41,7 +42,7 @@ export default function Portfolio() {
               transition={{ duration: 0.8 }}
             >
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-light tracking-wide mb-4">
-                Portfolio
+                <TypingEffect text="Portfolio" speed={50} showCursor={false} />
               </h1>
               <p className="text-lg md:text-xl text-muted-foreground font-light tracking-wide max-w-2xl mx-auto">
                 A curated collection of projects spanning web development, security, and automation

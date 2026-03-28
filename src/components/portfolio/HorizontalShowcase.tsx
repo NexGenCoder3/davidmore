@@ -1,5 +1,5 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import type { Project } from '@/types';
 import { GlassCard } from '@/components/ui/GlassCard';
@@ -15,14 +15,34 @@ interface HorizontalShowcaseProps {
 export function HorizontalShowcase({ projects }: HorizontalShowcaseProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollXProgress } = useScroll({ container: containerRef });
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStart = useRef({ x: 0, scrollLeft: 0 });
+
+  const onMouseDown = useCallback((e: React.MouseEvent) => {
+    setIsDragging(true);
+    dragStart.current = { x: e.pageX, scrollLeft: containerRef.current?.scrollLeft || 0 };
+  }, []);
+
+  const onMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!isDragging || !containerRef.current) return;
+    e.preventDefault();
+    const dx = e.pageX - dragStart.current.x;
+    containerRef.current.scrollLeft = dragStart.current.scrollLeft - dx;
+  }, [isDragging]);
+
+  const onMouseUp = useCallback(() => setIsDragging(false), []);
 
   return (
     <div className="relative">
       {/* Scroll container */}
       <div
         ref={containerRef}
-        className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-6 px-6 md:px-8 pb-8"
-        style={{ scrollBehavior: 'smooth' }}
+        className={`flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-6 px-6 md:px-8 pb-8 ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+        style={{ scrollBehavior: isDragging ? 'auto' : 'smooth' }}
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
+        onMouseUp={onMouseUp}
+        onMouseLeave={onMouseUp}
       >
         {projects.map((project, i) => (
           <Link
