@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
  * Theme toggle button for switching between light/dark modes
  * Shows sun icon in dark mode, moon icon in light mode
  */
-export function ThemeToggle() {
+export function ThemeToggle({ className }: { className?: string }) {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -33,7 +33,7 @@ export function ThemeToggle() {
     <Button
       variant="ghost"
       size="icon"
-      className="size-9 transition-colors hover:bg-accent"
+      className={`size-9 transition-colors hover:bg-accent ${className || ''}`}
       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
       aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
     >

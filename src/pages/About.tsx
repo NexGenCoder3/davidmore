@@ -3,6 +3,7 @@ import { Linkedin } from 'lucide-react';
 import { developerInfo } from '@/data/developer';
 import { Separator } from '@/components/ui/separator';
 import { SEOHead } from '@/components/seo/SEOHead';
+import { TypingEffect } from '@/components/effects/TypingEffect';
 
 function GithubIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -35,7 +36,7 @@ export default function About() {
             transition={{ duration: 0.4 }}
           >
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-light tracking-wide mb-4">
-              About
+              <TypingEffect text="About" speed={60} showCursor={false} />
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground font-light tracking-wide">
               Developer & Security Researcher

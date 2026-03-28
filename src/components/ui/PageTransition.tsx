@@ -57,13 +57,14 @@ export function PageTransition({ children }: PageTransitionProps) {
               transform: `skewX(-12deg) translateY(${config.offsetY}px) rotate(${config.rotationJitter}deg)`,
               backgroundColor: 'hsl(var(--primary))',
             }}
-            initial={{ scaleX: 1 }}
-            animate={{ scaleX: 0 }}
-            exit={{ scaleX: 1 }}
+            initial={{ scaleX: 1, transformOrigin: isForward ? '100% 50%' : '0% 50%' }}
+            animate={{ scaleX: 0, transformOrigin: isForward ? '100% 50%' : '0% 50%' }}
+            exit={{ scaleX: [0, 1, 1, 0], transformOrigin: isForward ? '0% 50%' : '100% 50%' }}
             transition={{
-              duration: 0.4,
+              duration: 0.6,
               delay: baseDelay,
               ease: [0.76, 0, 0.24, 1],
+              exit: { duration: 0.6, times: [0, 0.35, 0.65, 1] },
             }}
           />
         );

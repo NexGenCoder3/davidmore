@@ -5,6 +5,7 @@ import { Separator } from '@/components/ui/separator';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { TerminalContactForm } from '@/components/forms/TerminalContactForm';
 import { GlassCard } from '@/components/ui/GlassCard';
+import { TypingEffect } from '@/components/effects/TypingEffect';
 
 /**
  * Contact page with terminal-styled form and glass-morphic contact info
@@ -27,7 +28,7 @@ export default function Contact() {
               transition={{ duration: 0.4 }}
             >
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-light tracking-wide mb-4">
-                Get in Touch
+                <TypingEffect text="Get in Touch" speed={50} showCursor={false} />
               </h1>
               <p className="text-lg md:text-xl text-muted-foreground font-light tracking-wide">
                 Let's discuss your next project
