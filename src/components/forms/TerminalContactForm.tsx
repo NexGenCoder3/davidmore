@@ -208,6 +208,7 @@ export function TerminalContactForm() {
                       }
                     }}
                     className="flex-1 bg-transparent border-none outline-none text-hacker-green caret-hacker-green-glow resize-none min-h-[80px] placeholder:text-hacker-green/30"
+                    maxLength={1000}
                     placeholder="Type your message..."
                     autoFocus
                   />
@@ -226,6 +227,7 @@ export function TerminalContactForm() {
                   onChange={(e) => setCurrentInput(e.target.value)}
                   onKeyDown={handleKeyDown}
                   className="flex-1 bg-transparent border-none outline-none text-hacker-green caret-hacker-green-glow placeholder:text-hacker-green/30"
+                  maxLength={step === 'email' ? 255 : 100}
                   placeholder={step === 'type' ? '1, 2, or 3' : ''}
                   autoFocus
                 />
