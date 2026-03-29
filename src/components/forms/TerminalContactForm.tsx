@@ -54,6 +54,10 @@ export function TerminalContactForm() {
         setError('Name must be at least 2 characters');
         return;
       }
+      if (currentInput.trim().length > 100) {
+        setError('Name must be less than 100 characters');
+        return;
+      }
       setName(currentInput.trim());
       addLine(`> Name: ${currentInput.trim()}`, 'input');
       setCurrentInput('');
@@ -62,6 +66,10 @@ export function TerminalContactForm() {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(currentInput.trim())) {
         setError('Please enter a valid email address');
+        return;
+      }
+      if (currentInput.trim().length > 255) {
+        setError('Email must be less than 255 characters');
         return;
       }
       setEmail(currentInput.trim());
@@ -82,6 +90,10 @@ export function TerminalContactForm() {
     } else if (step === 'message') {
       if (currentInput.trim().length < 10) {
         setError('Message must be at least 10 characters');
+        return;
+      }
+      if (currentInput.trim().length > 1000) {
+        setError('Message must be less than 1000 characters');
         return;
       }
       setMessage(currentInput.trim());
@@ -196,6 +208,7 @@ export function TerminalContactForm() {
                       }
                     }}
                     className="flex-1 bg-transparent border-none outline-none text-hacker-green caret-hacker-green-glow resize-none min-h-[80px] placeholder:text-hacker-green/30"
+                    maxLength={1000}
                     placeholder="Type your message..."
                     autoFocus
                   />
@@ -214,6 +227,7 @@ export function TerminalContactForm() {
                   onChange={(e) => setCurrentInput(e.target.value)}
                   onKeyDown={handleKeyDown}
                   className="flex-1 bg-transparent border-none outline-none text-hacker-green caret-hacker-green-glow placeholder:text-hacker-green/30"
+                  maxLength={step === 'email' ? 255 : 100}
                   placeholder={step === 'type' ? '1, 2, or 3' : ''}
                   autoFocus
                 />
