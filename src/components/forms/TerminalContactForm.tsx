@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import emailjs from '@emailjs/browser';
 import { motion } from 'framer-motion';
 import { GlassCard } from '@/components/ui/GlassCard';
 
