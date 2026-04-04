@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { skills, skillCategories } from '@/data/skills';
 import { SkillCategory } from '@/components/skills/SkillCategory';
+import { TypingEffect } from '@/components/effects/TypingEffect';
 import type { SkillCategory as SkillCategoryType } from '@/types';
 
 export default function Skills() {
@@ -17,7 +18,7 @@ export default function Skills() {
         description="Interactive visualization of technical skills across Frontend, Backend, Security, and DevOps."
       />
 
-      <div className="min-h-screen bg-terminal-bg pt-24 pb-16 px-6">
+      <div className="min-h-screen bg-terminal-bg pt-24 pb-16 px-4 md:px-6">
         <div className="max-w-4xl mx-auto">
           {/* Terminal header */}
           <motion.div
@@ -28,11 +29,11 @@ export default function Skills() {
             <div className="text-hacker-green/60 text-sm mb-2">
               <span className="text-hacker-green">$</span> cat skills.dat | sort --by=proficiency
             </div>
-            <h1 className="text-3xl md:text-4xl font-bold text-hacker-green-glow drop-shadow-[0_0_10px_rgba(34,197,94,0.5)]">
-              SKILL_MATRIX
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-hacker-green-glow drop-shadow-[0_0_10px_rgba(34,197,94,0.5)]">
+              <TypingEffect text="SKILL_MATRIX" speed={60} showCursor={false} />
             </h1>
-            <div className="text-hacker-green/40 text-sm mt-2">
-              ═══════════════════════════════════════════
+            <div className="text-hacker-green/40 text-sm mt-2 overflow-hidden max-w-full">
+              <span className="block truncate">═══════════════════════════════════════════</span>
             </div>
           </motion.div>
 

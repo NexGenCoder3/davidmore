@@ -7,9 +7,6 @@ import { TerminalContactForm } from '@/components/forms/TerminalContactForm';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { TypingEffect } from '@/components/effects/TypingEffect';
 
-/**
- * Contact page with terminal-styled form and glass-morphic contact info
- */
 export default function Contact() {
   return (
     <>
@@ -20,17 +17,17 @@ export default function Contact() {
       
       <div className="min-h-screen">
         {/* Hero Section */}
-        <section className="py-24 md:py-32 px-6 lg:px-8 border-b border-border">
-          <div className="max-w-4xl mx-auto text-center space-y-6">
+        <section className="py-16 md:py-24 lg:py-32 px-4 md:px-6 lg:px-8 border-b border-border">
+          <div className="max-w-4xl mx-auto text-center space-y-4 md:space-y-6">
             <motion.div
               initial={{ opacity: 0.8, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
             >
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-light tracking-wide mb-4">
+              <h1 className="text-3xl md:text-5xl lg:text-7xl font-light tracking-wide mb-3 md:mb-4">
                 <TypingEffect text="Get in Touch" speed={50} showCursor={false} />
               </h1>
-              <p className="text-lg md:text-xl text-muted-foreground font-light tracking-wide">
+              <p className="text-base md:text-lg lg:text-xl text-muted-foreground font-light tracking-wide">
                 Let's discuss your next project
               </p>
             </motion.div>
@@ -38,21 +35,21 @@ export default function Contact() {
         </section>
 
         {/* Main Content */}
-        <section className="py-16 md:py-24 px-6 lg:px-8">
+        <section className="py-12 md:py-16 lg:py-24 px-4 md:px-6 lg:px-8">
           <div className="max-w-5xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-12 lg:gap-16">
+            <div className="grid lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16">
               {/* Terminal Contact Form */}
               <motion.div
-                className="space-y-6"
+                className="space-y-4 md:space-y-6"
                 initial={{ opacity: 0.8, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.4 }}
               >
-                <div className="space-y-3">
-                  <h2 className="text-3xl md:text-4xl font-light tracking-wide">
+                <div className="space-y-2 md:space-y-3">
+                  <h2 className="text-2xl md:text-3xl lg:text-4xl font-light tracking-wide">
                     Send a Message
                   </h2>
-                  <p className="text-muted-foreground font-light">
+                  <p className="text-sm md:text-base text-muted-foreground font-light">
                     Type your details into the terminal below. {developerInfo.availability}
                   </p>
                 </div>
@@ -62,32 +59,31 @@ export default function Contact() {
 
               {/* Contact Information */}
               <motion.div
-                className="space-y-8"
+                className="space-y-6 md:space-y-8"
                 initial={{ opacity: 0.8, x: 10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.4, delay: 0.1 }}
               >
-                <div className="space-y-3">
-                  <h2 className="text-3xl md:text-4xl font-light tracking-wide">
+                <div className="space-y-2 md:space-y-3">
+                  <h2 className="text-2xl md:text-3xl lg:text-4xl font-light tracking-wide">
                     Contact Information
                   </h2>
-                  <p className="text-muted-foreground font-light">
+                  <p className="text-sm md:text-base text-muted-foreground font-light">
                     Prefer to reach out directly? Here's how you can contact me.
                   </p>
                 </div>
 
                 <Separator />
 
-                {/* Contact Details in Glass Cards */}
                 <div className="space-y-4">
                   <GlassCard className="p-4">
-                    <div className="flex items-start gap-4">
-                      <div className="p-3 rounded-sm bg-primary/10">
-                        <Mail className="size-5 text-primary" />
+                    <div className="flex items-start gap-3 md:gap-4">
+                      <div className="p-2.5 md:p-3 rounded-sm bg-primary/10">
+                        <Mail className="size-4 md:size-5 text-primary" />
                       </div>
-                      <div className="space-y-1">
+                      <div className="space-y-1 min-w-0">
                         <p className="text-sm font-light tracking-wide text-muted-foreground">Email</p>
-                        <a href={`mailto:${developerInfo.email}`} className="text-base font-light hover:text-muted-foreground transition-colors">
+                        <a href={`mailto:${developerInfo.email}`} className="text-sm md:text-base font-light hover:text-muted-foreground transition-colors break-all">
                           {developerInfo.email}
                         </a>
                       </div>
@@ -95,13 +91,13 @@ export default function Contact() {
                   </GlassCard>
 
                   <GlassCard className="p-4">
-                    <div className="flex items-start gap-4">
-                      <div className="p-3 rounded-sm bg-primary/10">
-                        <Phone className="size-5 text-primary" />
+                    <div className="flex items-start gap-3 md:gap-4">
+                      <div className="p-2.5 md:p-3 rounded-sm bg-primary/10">
+                        <Phone className="size-4 md:size-5 text-primary" />
                       </div>
                       <div className="space-y-1">
                         <p className="text-sm font-light tracking-wide text-muted-foreground">Phone</p>
-                        <a href={`tel:${developerInfo.phone}`} className="text-base font-light hover:text-muted-foreground transition-colors">
+                        <a href={`tel:${developerInfo.phone}`} className="text-sm md:text-base font-light hover:text-muted-foreground transition-colors">
                           {developerInfo.phone}
                         </a>
                       </div>
@@ -109,13 +105,13 @@ export default function Contact() {
                   </GlassCard>
 
                   <GlassCard className="p-4">
-                    <div className="flex items-start gap-4">
-                      <div className="p-3 rounded-sm bg-primary/10">
-                        <MapPin className="size-5 text-primary" />
+                    <div className="flex items-start gap-3 md:gap-4">
+                      <div className="p-2.5 md:p-3 rounded-sm bg-primary/10">
+                        <MapPin className="size-4 md:size-5 text-primary" />
                       </div>
                       <div className="space-y-1">
                         <p className="text-sm font-light tracking-wide text-muted-foreground">Location</p>
-                        <p className="text-base font-light">{developerInfo.location}</p>
+                        <p className="text-sm md:text-base font-light">{developerInfo.location}</p>
                       </div>
                     </div>
                   </GlassCard>
