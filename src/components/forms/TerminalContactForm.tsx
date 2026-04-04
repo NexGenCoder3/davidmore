@@ -106,22 +106,17 @@ export function TerminalContactForm() {
       addLine('Encrypting message...', 'system');
 
       try {
-        const formspreeId = import.meta.env.VITE_FORMSPREE_ID;
-        if (!formspreeId) throw new Error('Form not configured');
-
-        const response = await fetch(`https://formspree.io/f/${encodeURIComponent(formspreeId)}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: name || currentInput.trim(),
-            email,
-            projectType,
+        await emailjs.send(
+          'service_sbquij3',
+          'template_utkw7p8',
+          {
+            from_name: name,
+            from_email: email,
+            project_type: projectType,
             message: currentInput.trim(),
-            _subject: `New ${projectType} inquiry from ${name}`,
-          }),
-        });
-
-        if (!response.ok) throw new Error('Send failed');
+          },
+          'YiDqeN2Xbo5hv9gMv'
+        );
 
         addLine('Message transmitted successfully ✓', 'success');
         addLine('You will receive a response within 24-48 hours.', 'system');
