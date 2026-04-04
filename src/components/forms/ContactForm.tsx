@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import emailjs from '@emailjs/browser';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -69,28 +70,17 @@ export function ContactForm() {
     setIsSubmitting(true);
     
     try {
-      // Formspree integration - uses VITE_FORMSPREE_ID environment variable
-      const formspreeId = import.meta.env.VITE_FORMSPREE_ID;
-      if (!formspreeId) {
-        throw new Error('Contact form is not configured. Please set up VITE_FORMSPREE_ID.');
-      }
-      const response = await fetch(`https://formspree.io/f/${encodeURIComponent(formspreeId)}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: data.name,
-          email: data.email,
-          projectType: data.projectType,
+      await emailjs.send(
+        'service_sbquij3',
+        'template_utkw7p8',
+        {
+          from_name: data.name,
+          from_email: data.email,
+          project_type: data.projectType,
           message: data.message,
-          _subject: `New ${data.projectType} inquiry from ${data.name}`,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to send message');
-      }
+        },
+        'YiDqeN2Xbo5hv9gMv'
+      );
 
       // Show success state
       setIsSuccess(true);
