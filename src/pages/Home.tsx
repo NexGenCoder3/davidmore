@@ -11,11 +11,21 @@ import { MatrixRain } from '@/components/effects/MatrixRain';
 import { GlitchText } from '@/components/effects/GlitchText';
 import { MasonryGrid } from '@/components/portfolio/MasonryGrid';
 import { HorizontalShowcase } from '@/components/portfolio/HorizontalShowcase';
-import { TestimonialCard } from '@/components/testimonials/TestimonialCard';
+import { TestimonialMarquee } from '@/components/testimonials/TestimonialMarquee';
 import { ParallaxSection } from '@/components/effects/ParallaxSection';
-import { GlassCard } from '@/components/ui/GlassCard';
 import { MagneticButton } from '@/components/effects/MagneticButton';
+import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
+import { SectionDivider } from '@/components/ui/SectionDivider';
 import { projects } from '@/data/projects';
+
+const stagger = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.1 } },
+};
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1] } },
+};
 
 export default function Home() {
   const featuredProjects = getFeaturedProjects();
@@ -85,6 +95,22 @@ export default function Home() {
               </div>
             </motion.div>
 
+            {/* Stats Counter Bar */}
+            <motion.div
+              className="mt-8 md:mt-12 w-full max-w-2xl mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 3, duration: 0.8 }}
+            >
+              <div className="flex items-center justify-center gap-6 md:gap-12 px-6 py-4 rounded-2xl bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.25)]">
+                <AnimatedCounter end={8} suffix="+" label="Projects" />
+                <div className="w-px h-8 bg-primary/20" />
+                <AnimatedCounter end={4} suffix="+" label="Years" />
+                <div className="w-px h-8 bg-primary/20" />
+                <AnimatedCounter end={100} suffix="%" label="Passion" />
+              </div>
+            </motion.div>
+
             <motion.div className="absolute bottom-8 md:bottom-12" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 3, duration: 0.8 }}>
               <ScrollIndicator />
             </motion.div>
@@ -92,44 +118,63 @@ export default function Home() {
         </section>
 
         {/* Introduction Section */}
+        <SectionDivider />
         <section className="py-16 md:py-24 lg:py-32 px-4 md:px-6 lg:px-8 bg-background">
-          <div className="max-w-4xl mx-auto text-center space-y-6 md:space-y-8">
-            <ScrollReveal>
-              <div className="space-y-6">
-                <h2 className="text-2xl md:text-3xl lg:text-4xl font-light tracking-wide">About My Work</h2>
-                <div className="space-y-4 text-base md:text-lg font-light leading-relaxed text-muted-foreground">
-                  <p>{developerInfo.biography.split('\n\n')[0]}</p>
-                </div>
-                <MagneticButton>
-                  <Link to="/about" className="inline-flex items-center gap-2 text-base font-light tracking-wide text-foreground hover:text-muted-foreground transition-colors group">
-                    <span>Learn More About Me</span>
-                    <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
-                  </Link>
-                </MagneticButton>
-              </div>
-            </ScrollReveal>
-          </div>
+          <motion.div
+            className="max-w-4xl mx-auto text-center space-y-6 md:space-y-8"
+            variants={stagger}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-100px' }}
+          >
+            <motion.div variants={fadeUp}>
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-light tracking-wide">About My Work</h2>
+            </motion.div>
+            <motion.div variants={fadeUp}>
+              <p className="text-base md:text-lg font-light leading-relaxed text-muted-foreground">
+                {developerInfo.biography.split('\n\n')[0]}
+              </p>
+            </motion.div>
+            <motion.div variants={fadeUp}>
+              <MagneticButton>
+                <Link to="/about" className="inline-flex items-center gap-2 text-base font-light tracking-wide text-foreground hover:text-muted-foreground transition-colors group">
+                  <span>Learn More About Me</span>
+                  <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+                </Link>
+              </MagneticButton>
+            </motion.div>
+          </motion.div>
         </section>
 
         {/* Horizontal Project Showcase */}
-        <section className="py-16 md:py-24 lg:py-32 border-t border-border">
-          <ScrollReveal>
-            <div className="text-center mb-10 md:mb-16 space-y-3 md:space-y-4 px-4 md:px-6">
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-light tracking-wide">Featured Projects</h2>
-              <p className="text-base md:text-lg text-muted-foreground font-light tracking-wide">Swipe to explore recent work</p>
-            </div>
-          </ScrollReveal>
+        <SectionDivider />
+        <section className="py-16 md:py-24 lg:py-32">
+          <motion.div
+            className="text-center mb-10 md:mb-16 space-y-3 md:space-y-4 px-4 md:px-6"
+            variants={stagger}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            <motion.h2 variants={fadeUp} className="text-3xl md:text-4xl lg:text-5xl font-light tracking-wide">Featured Projects</motion.h2>
+            <motion.p variants={fadeUp} className="text-base md:text-lg text-muted-foreground font-light tracking-wide">Swipe to explore recent work</motion.p>
+          </motion.div>
           <HorizontalShowcase projects={featuredProjects} />
         </section>
 
         {/* All Projects Masonry */}
-        <section className="py-16 md:py-24 lg:py-32 border-t border-border">
-          <ScrollReveal>
-            <div className="text-center mb-10 md:mb-16 space-y-3 md:space-y-4 px-4 md:px-6">
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-light tracking-wide">All Projects</h2>
-              <p className="text-base md:text-lg text-muted-foreground font-light tracking-wide">The complete collection</p>
-            </div>
-          </ScrollReveal>
+        <SectionDivider />
+        <section className="py-16 md:py-24 lg:py-32">
+          <motion.div
+            className="text-center mb-10 md:mb-16 space-y-3 md:space-y-4 px-4 md:px-6"
+            variants={stagger}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            <motion.h2 variants={fadeUp} className="text-3xl md:text-4xl lg:text-5xl font-light tracking-wide">All Projects</motion.h2>
+            <motion.p variants={fadeUp} className="text-base md:text-lg text-muted-foreground font-light tracking-wide">The complete collection</motion.p>
+          </motion.div>
           <div className="px-4 md:px-8">
             <MasonryGrid projects={projects} />
           </div>
@@ -145,19 +190,20 @@ export default function Home() {
           </ScrollReveal>
         </section>
 
-        {/* Testimonials Section */}
-        <section className="py-16 md:py-24 lg:py-32 border-t border-border bg-terminal-bg">
-          <ScrollReveal>
-            <div className="text-center mb-10 md:mb-16 space-y-3 md:space-y-4 px-4 md:px-6">
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-mono text-hacker-green-glow font-bold">TESTIMONIALS</h2>
-              <p className="text-hacker-green/50 font-mono text-xs md:text-sm">$ cat /var/log/feedback.log</p>
-            </div>
-          </ScrollReveal>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 px-4 md:px-8 max-w-5xl mx-auto">
-            {testimonials.map((t, i) => (
-              <TestimonialCard key={t.id} testimonial={t} delay={0.3 + i * 0.5} />
-            ))}
-          </div>
+        {/* Testimonials Section - Marquee */}
+        <SectionDivider />
+        <section className="py-16 md:py-24 lg:py-32 bg-terminal-bg">
+          <motion.div
+            className="text-center mb-10 md:mb-16 space-y-3 md:space-y-4 px-4 md:px-6"
+            variants={stagger}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            <motion.h2 variants={fadeUp} className="text-2xl md:text-3xl lg:text-4xl font-mono text-primary font-bold">TESTIMONIALS</motion.h2>
+            <motion.p variants={fadeUp} className="text-primary/50 font-mono text-xs md:text-sm">$ cat /var/log/feedback.log</motion.p>
+          </motion.div>
+          <TestimonialMarquee testimonials={testimonials} />
         </section>
       </div>
     </>

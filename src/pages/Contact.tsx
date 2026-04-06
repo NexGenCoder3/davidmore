@@ -6,6 +6,16 @@ import { SEOHead } from '@/components/seo/SEOHead';
 import { TerminalContactForm } from '@/components/forms/TerminalContactForm';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { TypingEffect } from '@/components/effects/TypingEffect';
+import { NetworkGrid } from '@/components/effects/NetworkGrid';
+
+const stagger = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.12 } },
+};
+const fadeUp = {
+  hidden: { opacity: 0, y: 25 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.4, 0, 0.2, 1] } },
+};
 
 export default function Contact() {
   return (
@@ -15,9 +25,14 @@ export default function Contact() {
         description={`Get in touch with ${developerInfo.name} for development projects, security consulting, and collaborations. ${developerInfo.availability}`}
       />
       
-      <div className="min-h-screen">
+      <div className="min-h-screen relative">
+        {/* Animated background */}
+        <div className="fixed inset-0 pointer-events-none z-0">
+          <NetworkGrid />
+        </div>
+
         {/* Hero Section */}
-        <section className="py-16 md:py-24 lg:py-32 px-4 md:px-6 lg:px-8 border-b border-border">
+        <section className="relative z-10 py-16 md:py-24 lg:py-32 px-4 md:px-6 lg:px-8 border-b border-border">
           <div className="max-w-4xl mx-auto text-center space-y-4 md:space-y-6">
             <motion.div
               initial={{ opacity: 0.8, y: 10 }}
@@ -35,7 +50,7 @@ export default function Contact() {
         </section>
 
         {/* Main Content */}
-        <section className="py-12 md:py-16 lg:py-24 px-4 md:px-6 lg:px-8">
+        <section className="relative z-10 py-12 md:py-16 lg:py-24 px-4 md:px-6 lg:px-8">
           <div className="max-w-5xl mx-auto">
             <div className="grid lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16">
               {/* Terminal Contact Form */}
@@ -60,61 +75,68 @@ export default function Contact() {
               {/* Contact Information */}
               <motion.div
                 className="space-y-6 md:space-y-8"
-                initial={{ opacity: 0.8, x: 10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, delay: 0.1 }}
+                variants={stagger}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
               >
-                <div className="space-y-2 md:space-y-3">
+                <motion.div variants={fadeUp} className="space-y-2 md:space-y-3">
                   <h2 className="text-2xl md:text-3xl lg:text-4xl font-light tracking-wide">
                     Contact Information
                   </h2>
                   <p className="text-sm md:text-base text-muted-foreground font-light">
                     Prefer to reach out directly? Here's how you can contact me.
                   </p>
-                </div>
+                </motion.div>
 
                 <Separator />
 
                 <div className="space-y-4">
-                  <GlassCard className="p-4">
-                    <div className="flex items-start gap-3 md:gap-4">
-                      <div className="p-2.5 md:p-3 rounded-sm bg-primary/10">
-                        <Mail className="size-4 md:size-5 text-primary" />
+                  <motion.div variants={fadeUp}>
+                    <GlassCard className="p-4">
+                      <div className="flex items-start gap-3 md:gap-4">
+                        <div className="p-2.5 md:p-3 rounded-sm bg-primary/10">
+                          <Mail className="size-4 md:size-5 text-primary" />
+                        </div>
+                        <div className="space-y-1 min-w-0">
+                          <p className="text-sm font-light tracking-wide text-muted-foreground">Email</p>
+                          <a href={`mailto:${developerInfo.email}`} className="text-sm md:text-base font-light hover:text-muted-foreground transition-colors break-all">
+                            {developerInfo.email}
+                          </a>
+                        </div>
                       </div>
-                      <div className="space-y-1 min-w-0">
-                        <p className="text-sm font-light tracking-wide text-muted-foreground">Email</p>
-                        <a href={`mailto:${developerInfo.email}`} className="text-sm md:text-base font-light hover:text-muted-foreground transition-colors break-all">
-                          {developerInfo.email}
-                        </a>
-                      </div>
-                    </div>
-                  </GlassCard>
+                    </GlassCard>
+                  </motion.div>
 
-                  <GlassCard className="p-4">
-                    <div className="flex items-start gap-3 md:gap-4">
-                      <div className="p-2.5 md:p-3 rounded-sm bg-primary/10">
-                        <Phone className="size-4 md:size-5 text-primary" />
+                  <motion.div variants={fadeUp}>
+                    <GlassCard className="p-4">
+                      <div className="flex items-start gap-3 md:gap-4">
+                        <div className="p-2.5 md:p-3 rounded-sm bg-primary/10">
+                          <Phone className="size-4 md:size-5 text-primary" />
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-sm font-light tracking-wide text-muted-foreground">Phone</p>
+                          <a href={`tel:${developerInfo.phone}`} className="text-sm md:text-base font-light hover:text-muted-foreground transition-colors">
+                            {developerInfo.phone}
+                          </a>
+                        </div>
                       </div>
-                      <div className="space-y-1">
-                        <p className="text-sm font-light tracking-wide text-muted-foreground">Phone</p>
-                        <a href={`tel:${developerInfo.phone}`} className="text-sm md:text-base font-light hover:text-muted-foreground transition-colors">
-                          {developerInfo.phone}
-                        </a>
-                      </div>
-                    </div>
-                  </GlassCard>
+                    </GlassCard>
+                  </motion.div>
 
-                  <GlassCard className="p-4">
-                    <div className="flex items-start gap-3 md:gap-4">
-                      <div className="p-2.5 md:p-3 rounded-sm bg-primary/10">
-                        <MapPin className="size-4 md:size-5 text-primary" />
+                  <motion.div variants={fadeUp}>
+                    <GlassCard className="p-4">
+                      <div className="flex items-start gap-3 md:gap-4">
+                        <div className="p-2.5 md:p-3 rounded-sm bg-primary/10">
+                          <MapPin className="size-4 md:size-5 text-primary" />
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-sm font-light tracking-wide text-muted-foreground">Location</p>
+                          <p className="text-sm md:text-base font-light">{developerInfo.location}</p>
+                        </div>
                       </div>
-                      <div className="space-y-1">
-                        <p className="text-sm font-light tracking-wide text-muted-foreground">Location</p>
-                        <p className="text-sm md:text-base font-light">{developerInfo.location}</p>
-                      </div>
-                    </div>
-                  </GlassCard>
+                    </GlassCard>
+                  </motion.div>
                 </div>
               </motion.div>
             </div>

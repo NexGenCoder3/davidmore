@@ -30,7 +30,7 @@ export function Layout({ children }: LayoutProps) {
       <CRTOverlay />
       <CursorTrail />
       <GradientOrbs />
-      {!isHomepage && <NetworkGrid />}
+      <NetworkGrid />
       <Header />
       <main 
         id="main-content" 

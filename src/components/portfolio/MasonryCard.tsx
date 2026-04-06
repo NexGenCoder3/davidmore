@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { TiltCard } from '@/components/ui/TiltCard';
 import type { Project } from '@/types';
 
 interface MasonryCardProps {
@@ -16,59 +17,81 @@ const getAspectRatio = (index: number) => {
 
 export function MasonryCard({ project, index }: MasonryCardProps) {
   const [isLoaded, setIsLoaded] = React.useState(false);
+  const [mousePos, setMousePos] = React.useState({ x: 0, y: 0 });
+  const cardRef = React.useRef<HTMLDivElement>(null);
   const techTags = project.tech?.split(', ') || [];
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  };
 
   return (
     <motion.div
-      whileHover={{ y: -8, transition: { duration: 0.3, ease: 'easeOut' } }}
-      whileTap={{ scale: 0.98 }}
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-50px' }}
+      transition={{ duration: 0.5, delay: index * 0.08 }}
     >
-      <Link
-        to={`/project/${project.slug}`}
-        className="group block rounded-xl overflow-hidden bg-white/[0.03] backdrop-blur-xl backdrop-saturate-150 border border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.06)] hover:shadow-[0_16px_48px_rgba(34,197,94,0.15),inset_0_1px_0_rgba(255,255,255,0.1)] hover:border-white/[0.15] transition-all duration-500"
-      >
-        <div className={cn('relative overflow-hidden bg-muted', getAspectRatio(index))}>
-          {!isLoaded && <div className="absolute inset-0 bg-muted animate-pulse" />}
-          <img
-            src={project.coverImage}
-            alt={project.title}
-            className={cn(
-              'absolute inset-0 w-full h-full object-cover transition-transform duration-700',
-              isLoaded ? 'opacity-100' : 'opacity-0',
-              'group-hover:scale-105'
-            )}
-            loading={index < 6 ? 'eager' : 'lazy'}
-            onLoad={() => setIsLoaded(true)}
-          />
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
-        </div>
+      <TiltCard>
+        <div ref={cardRef} onMouseMove={handleMouseMove}>
+          <Link
+            to={`/project/${project.slug}`}
+            className="group block rounded-xl overflow-hidden bg-white/[0.03] backdrop-blur-xl backdrop-saturate-150 border border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.06)] hover:shadow-[0_16px_48px_rgba(34,197,94,0.15),inset_0_1px_0_rgba(255,255,255,0.1)] hover:border-white/[0.15] transition-all duration-500"
+          >
+            {/* Cursor glow overlay */}
+            <div
+              className="pointer-events-none absolute inset-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl"
+              style={{
+                background: `radial-gradient(600px circle at ${mousePos.x}px ${mousePos.y}px, rgba(34,197,94,0.07), transparent 40%)`,
+              }}
+            />
 
-        <div className="p-4 space-y-3">
-          <div className="flex items-center gap-2 text-xs font-mono text-primary/70">
-            <span className="capitalize">{project.category}</span>
-            <span className="text-muted-foreground">•</span>
-            <span>{project.year}</span>
-          </div>
-          <h3 className="text-lg font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">
-            {project.title}
-          </h3>
-          <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
-            {project.description}
-          </p>
-          {techTags.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 pt-1">
-              {techTags.map((tag) => (
-                <span
-                  key={tag}
-                  className="px-2 py-0.5 text-xs font-mono rounded bg-primary/10 text-primary/80 border border-primary/20"
-                >
-                  {tag}
-                </span>
-              ))}
+            <div className={cn('relative overflow-hidden bg-muted', getAspectRatio(index))}>
+              {!isLoaded && <div className="absolute inset-0 bg-muted animate-pulse" />}
+              <img
+                src={project.coverImage}
+                alt={project.title}
+                className={cn(
+                  'absolute inset-0 w-full h-full object-cover transition-transform duration-700',
+                  isLoaded ? 'opacity-100' : 'opacity-0',
+                  'group-hover:scale-105'
+                )}
+                loading={index < 6 ? 'eager' : 'lazy'}
+                onLoad={() => setIsLoaded(true)}
+              />
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
             </div>
-          )}
+
+            <div className="p-4 space-y-3">
+              <div className="flex items-center gap-2 text-xs font-mono text-primary/70">
+                <span className="capitalize">{project.category}</span>
+                <span className="text-muted-foreground">•</span>
+                <span>{project.year}</span>
+              </div>
+              <h3 className="text-lg font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">
+                {project.title}
+              </h3>
+              <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
+                {project.description}
+              </p>
+              {techTags.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 pt-1">
+                  {techTags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="px-2 py-0.5 text-xs font-mono rounded bg-primary/10 text-primary/80 border border-primary/20"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </Link>
         </div>
-      </Link>
+      </TiltCard>
     </motion.div>
   );
 }

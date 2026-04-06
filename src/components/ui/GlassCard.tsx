@@ -9,13 +9,10 @@ interface GlassCardProps {
   as?: 'div' | 'section' | 'article';
 }
 
-/**
- * Apple Liquid Glass UI card with frosted glass effect,
- * specular highlight on hover, and subtle border glow
- */
 export function GlassCard({ children, className, hoverEffect = true, as = 'div' }: GlassCardProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
+  const [isHovered, setIsHovered] = useState(false);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!ref.current || !hoverEffect) return;
@@ -31,19 +28,22 @@ export function GlassCard({ children, className, hoverEffect = true, as = 'div' 
     <Component
       ref={ref}
       onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       className={cn(
-        'relative overflow-hidden rounded-xl',
+        'group relative overflow-hidden rounded-xl',
         'bg-white/[0.03] dark:bg-white/[0.03]',
         'backdrop-blur-xl backdrop-saturate-150',
         'border border-white/[0.08]',
         'shadow-[0_8px_32px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.06)]',
         'transition-shadow duration-500',
-        hoverEffect && 'hover:shadow-[0_16px_48px_rgba(34,197,94,0.15),inset_0_1px_0_rgba(255,255,255,0.1)]',
+        hoverEffect && 'hover:shadow-[0_16px_48px_rgba(34,197,94,0.15),inset_0_1px_0_rgba(255,255,255,0.1)] hover:border-white/[0.15]',
         className
       )}
       style={hoverEffect ? {
         background: `
-          radial-gradient(circle at ${mousePos.x}% ${mousePos.y}%, rgba(255,255,255,0.06) 0%, transparent 50%),
+          radial-gradient(600px circle at ${mousePos.x}% ${mousePos.y}%, rgba(34,197,94,${isHovered ? 0.08 : 0}) 0%, transparent 40%),
+          radial-gradient(circle at ${mousePos.x}% ${mousePos.y}%, rgba(255,255,255,${isHovered ? 0.08 : 0.03}) 0%, transparent 50%),
           rgba(255,255,255,0.03)
         `,
       } : undefined}
@@ -51,10 +51,12 @@ export function GlassCard({ children, className, hoverEffect = true, as = 'div' 
       {/* Specular highlight sweep */}
       {hoverEffect && (
         <div
-          className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+          className={cn(
+            'pointer-events-none absolute inset-0 transition-opacity duration-500',
+            isHovered ? 'opacity-100' : 'opacity-0'
+          )}
           style={{
-            background: `linear-gradient(135deg, transparent 30%, rgba(255,255,255,0.05) 50%, transparent 70%)`,
-            backgroundSize: '200% 200%',
+            background: `linear-gradient(135deg, transparent 30%, rgba(255,255,255,0.08) 50%, transparent 70%)`,
           }}
         />
       )}

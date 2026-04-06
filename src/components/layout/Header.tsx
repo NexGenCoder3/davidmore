@@ -20,17 +20,10 @@ const navLinks = [
   { name: 'Contact', path: '/contact' },
 ];
 
-/**
- * Main header component with scroll-aware styling
- * Transparent on hero section, solid when scrolled
- * Mobile responsive with hamburger menu
- */
 export function Header() {
   const location = useLocation();
   const { isScrolled } = useScrollPosition();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  
-  // Header is transparent only on homepage hero when not scrolled
   const isTransparent = location.pathname === '/' && !isScrolled;
 
   return (
@@ -96,6 +89,11 @@ export function Header() {
 
           {/* Mobile Menu */}
           <div className="md:hidden flex items-center gap-2">
+            {/* Availability badge - mobile */}
+            <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-primary/10 border border-primary/20">
+              <span className="size-1.5 rounded-full bg-primary animate-pulse" />
+              <span className="text-[10px] font-mono text-primary/80">Available</span>
+            </div>
             <ThemeToggle className={isTransparent ? 'text-white hover:bg-white/10' : ''} />
             <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
               <SheetTrigger asChild>
@@ -113,15 +111,25 @@ export function Header() {
               </SheetTrigger>
               <SheetContent side="right" className="w-full sm:w-80">
                 <nav className="flex flex-col gap-6 mt-8">
-                  {navLinks.map((link) => (
-                    <Link
+                  {navLinks.map((link, i) => (
+                    <motion.div
                       key={link.path}
-                      to={link.path}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="text-lg leading-7 font-light tracking-wide text-foreground hover:text-foreground/80"
+                      initial={{ opacity: 0, x: 30 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.3, delay: i * 0.05 }}
                     >
-                      {link.name}
-                    </Link>
+                      <Link
+                        to={link.path}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="flex items-center gap-3 text-lg leading-7 font-light tracking-wide text-foreground hover:text-foreground/80"
+                      >
+                        <span className="text-primary/50 font-mono text-sm">{'>_'}</span>
+                        <span>{link.name}</span>
+                        {location.pathname === link.path && (
+                          <span className="size-2 rounded-full bg-primary ml-auto" />
+                        )}
+                      </Link>
+                    </motion.div>
                   ))}
                 </nav>
               </SheetContent>
