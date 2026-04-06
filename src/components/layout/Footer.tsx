@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { developerInfo } from '@/data/developer';
 import { MagneticButton } from '@/components/effects/MagneticButton';
+import { toast } from 'sonner';
 
 function GithubIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -33,19 +34,35 @@ export function Footer() {
 
   const currentDir = location.pathname === '/' ? '~' : `~${location.pathname}`;
 
+  const copyPath = () => {
+    navigator.clipboard.writeText(currentDir);
+    toast.success('Path copied to clipboard');
+  };
+
   return (
     <footer className="border-t border-border">
       {/* Terminal Status Bar */}
-      <div className="bg-terminal-bg border-b border-hacker-green/20 px-4 md:px-6 lg:px-8 py-2 font-mono text-[10px] md:text-xs">
+      <div className="bg-terminal-bg border-b border-primary/20 px-4 md:px-6 lg:px-8 py-2 font-mono text-[10px] md:text-xs">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 md:gap-4 flex-wrap">
-          <div className="flex items-center gap-2 md:gap-4 text-hacker-green/70 min-w-0">
-            <span className="text-hacker-green/50 shrink-0">guest@dm:</span>
-            <span className="truncate">{currentDir}</span>
+          <div className="flex items-center gap-2 md:gap-4 text-primary/70 min-w-0">
+            <span className="text-primary/50 shrink-0">guest@dm:</span>
+            <button
+              onClick={copyPath}
+              className="truncate hover:text-primary transition-colors cursor-pointer"
+              title="Click to copy path"
+            >
+              {currentDir}
+            </button>
           </div>
-          <div className="flex items-center gap-3 md:gap-6 text-hacker-green/50">
-            <span className="hidden sm:inline">⏱ uptime: {formatUptime(uptime)}</span>
+          <div className="flex items-center gap-3 md:gap-6 text-primary/50">
+            <span
+              className="hidden sm:inline cursor-default"
+              title="Session uptime — how long you've been browsing"
+            >
+              ⏱ uptime: {formatUptime(uptime)}
+            </span>
             <span className="flex items-center gap-1.5">
-              <span className="size-1.5 md:size-2 rounded-full bg-hacker-green animate-pulse" />
+              <span className="size-1.5 md:size-2 rounded-full bg-primary animate-pulse" />
               SECURE
             </span>
           </div>
