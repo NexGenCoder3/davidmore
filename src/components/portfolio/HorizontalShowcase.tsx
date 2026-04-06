@@ -1,6 +1,7 @@
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef, useState, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useRef, useState, useCallback, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type { Project } from '@/types';
 import { GlassCard } from '@/components/ui/GlassCard';
 
@@ -10,9 +11,43 @@ interface HorizontalShowcaseProps {
 
 export function HorizontalShowcase({ projects }: HorizontalShowcaseProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollXProgress } = useScroll({ container: containerRef });
   const [isDragging, setIsDragging] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(true);
   const dragStart = useRef({ x: 0, scrollLeft: 0 });
+
+  const updateScrollState = useCallback(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const scrollLeft = el.scrollLeft;
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    setCanScrollPrev(scrollLeft > 10);
+    setCanScrollNext(scrollLeft < maxScroll - 10);
+
+    // Calculate active index based on scroll position
+    const cardWidth = el.scrollWidth / projects.length;
+    const index = Math.round(scrollLeft / cardWidth);
+    setActiveIndex(Math.min(index, projects.length - 1));
+  }, [projects.length]);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    el.addEventListener('scroll', updateScrollState, { passive: true });
+    updateScrollState();
+    return () => el.removeEventListener('scroll', updateScrollState);
+  }, [updateScrollState]);
+
+  const scrollToIndex = useCallback((index: number) => {
+    const el = containerRef.current;
+    if (!el) return;
+    const cardWidth = el.scrollWidth / projects.length;
+    el.scrollTo({ left: cardWidth * index, behavior: 'smooth' });
+  }, [projects.length]);
+
+  const scrollPrev = useCallback(() => scrollToIndex(Math.max(0, activeIndex - 1)), [activeIndex, scrollToIndex]);
+  const scrollNext = useCallback(() => scrollToIndex(Math.min(projects.length - 1, activeIndex + 1)), [activeIndex, projects.length, scrollToIndex]);
 
   const onMouseDown = useCallback((e: React.MouseEvent) => {
     setIsDragging(true);
@@ -29,7 +64,52 @@ export function HorizontalShowcase({ projects }: HorizontalShowcaseProps) {
   const onMouseUp = useCallback(() => setIsDragging(false), []);
 
   return (
-    <div className="relative">
+    <div className="relative group/showcase">
+      {/* Prev Button */}
+      <AnimatePresence>
+        {canScrollPrev && (
+          <motion.button
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -10 }}
+            transition={{ duration: 0.2 }}
+            onClick={scrollPrev}
+            className="absolute left-1 md:left-2 top-1/2 -translate-y-1/2 z-20 
+              w-9 h-9 md:w-12 md:h-12 rounded-full flex items-center justify-center
+              bg-black/60 backdrop-blur-md border border-primary/30 
+              shadow-[0_0_15px_hsl(var(--primary)/0.2)]
+              hover:shadow-[0_0_25px_hsl(var(--primary)/0.4)] hover:border-primary/60 hover:bg-black/80
+              transition-all duration-300 cursor-pointer"
+            aria-label="Previous project"
+          >
+            <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-primary" />
+          </motion.button>
+        )}
+      </AnimatePresence>
+
+      {/* Next Button */}
+      <AnimatePresence>
+        {canScrollNext && (
+          <motion.button
+            initial={{ opacity: 0, x: 10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 10 }}
+            transition={{ duration: 0.2 }}
+            onClick={scrollNext}
+            className="absolute right-1 md:right-2 top-1/2 -translate-y-1/2 z-20
+              w-9 h-9 md:w-12 md:h-12 rounded-full flex items-center justify-center
+              bg-black/60 backdrop-blur-md border border-primary/30
+              shadow-[0_0_15px_hsl(var(--primary)/0.2)]
+              hover:shadow-[0_0_25px_hsl(var(--primary)/0.4)] hover:border-primary/60 hover:bg-black/80
+              transition-all duration-300 cursor-pointer"
+            aria-label="Next project"
+          >
+            <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-primary" />
+          </motion.button>
+        )}
+      </AnimatePresence>
+
+      {/* Cards Container */}
       <div
         ref={containerRef}
         className={`flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-4 md:gap-6 px-4 md:px-8 pb-8 ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
@@ -90,24 +170,18 @@ export function HorizontalShowcase({ projects }: HorizontalShowcaseProps) {
         ))}
       </div>
 
-      {/* Progress indicator */}
-      <div className="flex justify-center gap-2 mt-4">
+      {/* Clickable Progress Dots */}
+      <div className="flex justify-center items-center gap-2 mt-4">
         {projects.map((_, i) => (
-          <motion.div
+          <button
             key={i}
-            className="w-2 h-2 rounded-full bg-hacker-green/30"
-            style={{
-              scale: useTransform(
-                scrollXProgress,
-                [i / projects.length, (i + 0.5) / projects.length, (i + 1) / projects.length],
-                [0.8, 1.4, 0.8]
-              ),
-              opacity: useTransform(
-                scrollXProgress,
-                [i / projects.length, (i + 0.5) / projects.length, (i + 1) / projects.length],
-                [0.3, 1, 0.3]
-              ),
-            }}
+            onClick={() => scrollToIndex(i)}
+            className={`rounded-full transition-all duration-300 cursor-pointer
+              ${activeIndex === i
+                ? 'w-8 h-2.5 bg-primary shadow-[0_0_10px_hsl(var(--primary)/0.5)]'
+                : 'w-2.5 h-2.5 bg-primary/30 hover:bg-primary/50'
+              }`}
+            aria-label={`Go to project ${i + 1}`}
           />
         ))}
       </div>
