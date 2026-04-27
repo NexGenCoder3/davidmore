@@ -1,36 +1,24 @@
- import type { DeveloperInfo } from '@/types';
- 
- export const developerInfo: DeveloperInfo = {
-   name: 'David More',
-   tagline: 'Full-Stack Developer & Security Researcher',
-   heroIntroduction: 'Building secure, scalable applications and exploring the depths of cybersecurity.',
-   biography: `David More is an accomplished full-stack developer and security researcher with a passion for creating robust web applications and uncovering vulnerabilities. With expertise spanning modern frameworks, backend systems, and penetration testing, his work bridges the gap between development and security.
- 
- Based in Nigeria, David brings a unique perspective to every project, combining clean code architecture with security-first thinking. His approach to development is deeply rooted in understanding systems from the ground up, believing that the best software is built with both functionality and security in mind.`,
-   approach: `My development philosophy is guided by three principles: security, efficiency, and elegance. I believe the best code emerges when security is baked in from the start, when systems are optimized for performance, and when architecture is clean and maintainable.
- 
- Whether working on web applications or security research, I strive to create solutions that are not only functional but also resilient against modern threats.`,
-   awards: [
-     'Bug Bounty Recognition - Multiple Platforms',
-     'Open Source Contributor - Security Tools',
-     'CTF Competition Finalist 2023',
-     'Community Developer Award 2022'
-   ],
-   clients: [
-     'Tech Startups',
-     'Security Firms',
-     'Open Source Projects',
-     'Enterprise Applications'
-   ],
-   education: 'Self-taught Developer & Security Researcher',
-   location: 'Nigeria, LG',
-   email: 'ekeledavid39@gmail.com',
-   phone: '+234 8109419058',
-   availability: 'Currently available for projects',
-   socialLinks: {
-     github: 'https://github.com/davidmore',
-     linkedin: 'https://linkedin.com/in/davidmore'
-   },
-   // Keeping current portrait image as requested
-   portraitImage: 'https://images.unsplash.com/photo-1585279968680-6606ee6ed134?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NjB8&ixlib=rb-4.1.0&q=80&w=1080'
- };
+import type { DeveloperInfo } from '@/types';
+
+export const developerInfo: DeveloperInfo = {
+  name: 'David More-Ekele',
+  tagline: 'Software Engineering Student & Front-End Developer',
+  heroIntroduction: 'Building responsive, user-focused web applications and sharpening my skills through real projects.',
+  biography: `David More-Ekele is a final-year Software Engineering student based in Port Harcourt, Rivers State, Nigeria. He focuses on building practical web applications with clean interfaces, responsive layouts, and modern front-end tools.
+
+He enjoys turning ideas into working products and learning by shipping projects. His background includes SIWES industrial training and hands-on work with React, TypeScript, Vite, Tailwind CSS, and shadcn/ui.`,
+  approach: `My development philosophy is simple: build clean, make it work, and keep improving. I like code that is easy to understand, user-friendly, and ready to grow with the project.
+
+I pay attention to responsiveness, usability, and small details that make a big difference in the final product.`,
+  awards: [],
+  clients: [],
+  education: 'Bachelor\'s Degree in Software Engineering (in progress)',
+  location: 'Port Harcourt, Rivers State, Nigeria',
+  email: 'ekeledavid39@gmail.com',
+  phone: '08089569377',
+  availability: 'Available for internships, entry-level roles, and freelance projects',
+  socialLinks: {
+    github: 'https://github.com/NexGenCoder3'
+  },
+  portraitImage: 'https://images.unsplash.com/photo-1585279968680-6606ee6ed134?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NjB8&ixlib=rb-4.1.0&q=80&w=1080'
+};
