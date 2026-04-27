@@ -6,26 +6,24 @@ import { TypingEffect } from '@/components/effects/TypingEffect';
 
 export default function Resume() {
   const handlePrint = () => window.print();
+  const hasAwards = developerInfo.awards.length > 0;
 
   return (
     <>
-      <SEOHead title="Resume" description="David More's resume — Full-Stack Developer & Security Researcher." />
+      <SEOHead title="Resume" description={`Resume for ${developerInfo.name}. Software Engineering student and front-end developer.`} />
 
       <div className="min-h-screen bg-terminal-bg pt-24 pb-16 px-4 md:px-6">
         <div className="max-w-3xl mx-auto font-mono">
-          {/* Terminal command */}
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-hacker-green/60 text-sm mb-4">
             <span className="text-hacker-green">$</span> cat resume.txt
           </motion.div>
 
-          {/* Resume content */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
             className="border border-hacker-green/30 rounded-lg p-4 md:p-6 lg:p-8 space-y-6 print:border-none print:p-0 print:text-black"
           >
-            {/* Header */}
             <div className="border-b border-hacker-green/20 pb-4 print:border-black/20">
               <h1 className="text-xl md:text-2xl lg:text-3xl text-hacker-green-glow font-bold print:text-black">
                 <TypingEffect text={developerInfo.name} speed={50} showCursor={false} />
@@ -37,12 +35,11 @@ export default function Resume() {
               </div>
             </div>
 
-            {/* Education */}
             <Section title="EDUCATION">
               <p className="text-hacker-green/70 text-sm print:text-gray-700">{developerInfo.education}</p>
+              <p className="text-hacker-green/60 text-sm print:text-gray-600 mt-1">Expected graduation: August 2026</p>
             </Section>
 
-            {/* Skills summary */}
             <Section title="SKILLS">
               {(['Frontend', 'Backend', 'Security', 'DevOps'] as const).map(cat => (
                 <div key={cat} className="mb-2">
@@ -54,13 +51,12 @@ export default function Resume() {
               ))}
             </Section>
 
-            {/* Experience */}
             <Section title="EXPERIENCE & PROJECTS">
               <div className="space-y-3">
                 {[
-                  { role: 'Security Researcher', period: '2022 – Present', desc: 'Bug bounty hunting, CTF competitions, and open-source security tool development.' },
-                  { role: 'Full-Stack Developer', period: '2021 – Present', desc: 'Building scalable web applications with React, Node.js, and Go. Focus on real-time systems and API architecture.' },
-                  { role: 'DevOps Automation', period: '2022 – 2023', desc: 'CI/CD pipeline design, Kubernetes orchestration, and infrastructure-as-code with Terraform.' },
+                  { role: 'SIWES Industrial Training', period: 'Completed', desc: 'Hands-on exposure to professional software development workflows, collaboration, and debugging.' },
+                  { role: 'Front-End Developer', period: 'Current', desc: 'Building responsive web applications with React, TypeScript, Vite, Tailwind CSS, and modern UI tooling.' },
+                  { role: 'Portfolio Project Builder', period: 'Current', desc: 'Designed and deployed a live portfolio site with routing, animation, contact flow, and reusable components.' },
                 ].map(exp => (
                   <div key={exp.role}>
                     <div className="flex flex-col sm:flex-row sm:justify-between text-sm gap-0.5">
@@ -73,14 +69,16 @@ export default function Resume() {
               </div>
             </Section>
 
-            {/* Awards */}
             <Section title="AWARDS & RECOGNITION">
-              {developerInfo.awards.map(a => (
-                <div key={a} className="text-hacker-green/70 text-sm print:text-gray-700">• {a}</div>
-              ))}
+              {hasAwards ? (
+                developerInfo.awards.map(a => (
+                  <div key={a} className="text-hacker-green/70 text-sm print:text-gray-700">• {a}</div>
+                ))
+              ) : (
+                <div className="text-hacker-green/60 text-sm print:text-gray-600">No formal awards listed yet.</div>
+              )}
             </Section>
 
-            {/* Download button */}
             <div className="pt-4 print:hidden">
               <button
                 onClick={handlePrint}
