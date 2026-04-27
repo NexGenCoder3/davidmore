@@ -36,7 +36,6 @@ export default function Home() {
       <MatrixRain />
 
       <div className="min-h-screen relative z-10">
-        {/* Hero Section */}
         <section className="relative h-screen w-full overflow-hidden bg-black/90">
           <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.1)_50%)] bg-[length:100%_4px] z-10" />
           <ParallaxSection speed={-0.15} className="absolute inset-0 opacity-10">
@@ -56,7 +55,6 @@ export default function Home() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
             >
-              {/* Terminal Header */}
               <div className="flex items-center gap-2 px-3 md:px-4 py-2 md:py-3 bg-primary/10 border-b border-primary/20">
                 <div className="flex gap-1.5 md:gap-2">
                   <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-destructive/80" />
@@ -95,7 +93,6 @@ export default function Home() {
               </div>
             </motion.div>
 
-            {/* Stats Counter Bar */}
             <motion.div
               className="mt-8 md:mt-12 w-full max-w-2xl mx-auto"
               initial={{ opacity: 0, y: 20 }}
@@ -103,9 +100,9 @@ export default function Home() {
               transition={{ delay: 3, duration: 0.8 }}
             >
               <div className="flex items-center justify-center gap-6 md:gap-12 px-6 py-4 rounded-2xl bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.25)]">
-                <AnimatedCounter end={8} suffix="+" label="Projects" />
+                <AnimatedCounter end={projects.length} suffix="+" label="Projects" />
                 <div className="w-px h-8 bg-primary/20" />
-                <AnimatedCounter end={4} suffix="+" label="Years" />
+                <AnimatedCounter end={1} suffix="" label="Main Focus" />
                 <div className="w-px h-8 bg-primary/20" />
                 <AnimatedCounter end={100} suffix="%" label="Passion" />
               </div>
@@ -117,7 +114,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Introduction Section */}
         <SectionDivider />
         <section className="py-16 md:py-24 lg:py-32 px-4 md:px-6 lg:px-8 bg-background">
           <motion.div
@@ -146,7 +142,6 @@ export default function Home() {
           </motion.div>
         </section>
 
-        {/* Horizontal Project Showcase */}
         <SectionDivider />
         <section className="py-16 md:py-24 lg:py-32">
           <motion.div
@@ -162,7 +157,6 @@ export default function Home() {
           <HorizontalShowcase projects={featuredProjects} />
         </section>
 
-        {/* All Projects Masonry */}
         <SectionDivider />
         <section className="py-16 md:py-24 lg:py-32">
           <motion.div
@@ -190,7 +184,6 @@ export default function Home() {
           </ScrollReveal>
         </section>
 
-        {/* Testimonials Section - Marquee */}
         <SectionDivider />
         <section className="py-16 md:py-24 lg:py-32 bg-terminal-bg">
           <motion.div
