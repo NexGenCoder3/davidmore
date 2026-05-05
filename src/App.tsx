@@ -13,6 +13,7 @@ import { BootSequence } from "@/components/effects/BootSequence";
 import { AnimatePresence } from "framer-motion";
 import { lazy, Suspense, useState, useEffect } from "react";
 import { ScrollToTop } from "@/components/utils/ScrollToTop";
+import { RouteLoader } from "@/components/ui/RouteLoader";
 
 // Code-split route components for better performance
 const Index = lazy(() => import("./pages/Index"));
@@ -160,6 +161,7 @@ const App = () => {
             {showBoot && <BootSequence onComplete={handleBootComplete} />}
             <BrowserRouter>
               <ScrollToTop />
+              <RouteLoader />
               <SkipToContent />
               <Layout>
                 <Suspense fallback={<LoadingFallback />}>

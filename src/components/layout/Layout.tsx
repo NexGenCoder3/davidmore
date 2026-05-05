@@ -7,6 +7,7 @@ import { BackNavigation } from './BackNavigation';
 import { CRTOverlay } from '@/components/effects/CRTOverlay';
 import { CommandTerminal } from '@/components/effects/CommandTerminal';
 import { CursorTrail } from '@/components/effects/CursorTrail';
+import { CustomCursor } from '@/components/effects/CustomCursor';
 import { GradientOrbs } from '@/components/effects/GradientOrbs';
 import { NetworkGrid } from '@/components/effects/NetworkGrid';
 import { StatusWidget } from '@/components/effects/StatusWidget';
@@ -29,6 +30,7 @@ export function Layout({ children }: LayoutProps) {
       <ScrollProgress />
       <CRTOverlay />
       <CursorTrail />
+      <CustomCursor />
       <GradientOrbs />
       <NetworkGrid />
       <Header />
