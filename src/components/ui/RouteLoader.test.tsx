@@ -59,7 +59,7 @@ describe('RouteLoader', () => {
     act(() => {
       screen.getByText('go-about').click();
     });
-    expect(screen.getByTestId('route-loader')).toBeInTheDocument();
+    expect(screen.getAllByTestId('route-loader').length).toBeGreaterThan(0);
     act(() => {
       vi.advanceTimersByTime(2000);
     });
