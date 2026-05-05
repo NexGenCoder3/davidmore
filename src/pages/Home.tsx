@@ -9,6 +9,7 @@ import { ArrowRight, Terminal } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { MatrixRain } from '@/components/effects/MatrixRain';
 import { GlitchText } from '@/components/effects/GlitchText';
+import { LetterReveal } from '@/components/effects/LetterReveal';
 import { MasonryGrid } from '@/components/portfolio/MasonryGrid';
 import { HorizontalShowcase } from '@/components/portfolio/HorizontalShowcase';
 import { TestimonialMarquee } from '@/components/testimonials/TestimonialMarquee';
@@ -83,14 +84,30 @@ export default function Home() {
                 <div className="text-primary/60 text-xs md:text-sm">
                   <span className="text-primary">$</span> whoami
                 </div>
-                <motion.div
-                  className="text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-bold tracking-tight text-primary drop-shadow-[0_0_10px_rgba(34,197,94,0.5)]"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.5, delay: 0.3 }}
-                >
-                  <GlitchText text={developerInfo.name.toUpperCase()} as="h1" glitchIntensity="medium" />
-                </motion.div>
+                <div className="relative text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-bold tracking-tight text-primary drop-shadow-[0_0_10px_rgba(34,197,94,0.5)]">
+                  {/* Cinematic letter-by-letter entrance */}
+                  <motion.div
+                    initial={{ opacity: 1 }}
+                    animate={{ opacity: 0 }}
+                    transition={{ duration: 0.4, delay: 1.6 }}
+                    className="absolute inset-0"
+                  >
+                    <LetterReveal
+                      text={developerInfo.name.toUpperCase()}
+                      as="h1"
+                      delay={0.25}
+                      stagger={0.05}
+                    />
+                  </motion.div>
+                  {/* Glitch takes over once letters have landed */}
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 1.6 }}
+                  >
+                    <GlitchText text={developerInfo.name.toUpperCase()} as="h1" glitchIntensity="medium" />
+                  </motion.div>
+                </div>
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 1.5 }} className="space-y-2">
                   <div className="text-primary/60 text-xs md:text-sm"><span className="text-primary">$</span> cat role.txt</div>
                   <p className="text-lg md:text-xl lg:text-2xl text-primary/90">{developerInfo.tagline}</p>
