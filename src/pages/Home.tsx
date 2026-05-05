@@ -38,6 +38,18 @@ export default function Home() {
       <div className="min-h-screen relative z-10">
         <section className="relative h-screen w-full overflow-hidden bg-black/90">
           <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.1)_50%)] bg-[length:100%_4px] z-10" />
+          {/* Cinematic vignette pulse — one-shot on mount */}
+          <motion.div
+            aria-hidden
+            className="absolute inset-0 pointer-events-none z-[11]"
+            style={{
+              background:
+                'radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.55) 100%)',
+            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 1, 0.65] }}
+            transition={{ duration: 1.6, times: [0, 0.5, 1], ease: 'easeOut' }}
+          />
           <ParallaxSection speed={-0.15} className="absolute inset-0 opacity-10">
             <div className="w-full h-[120%]" style={{
               backgroundImage: `
