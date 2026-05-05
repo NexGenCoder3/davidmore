@@ -225,3 +225,15 @@ All colors MUST be HSL.
   50% { opacity: 0.03; }
   100% { opacity: 0.015; }
 }
+
+/* Custom cursor: hide native cursor when active (desktop only) */
+html.has-custom-cursor,
+html.has-custom-cursor * {
+  cursor: none !important;
+}
+@media (pointer: coarse) {
+  html.has-custom-cursor,
+  html.has-custom-cursor * {
+    cursor: auto !important;
+  }
+}
