@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useCursorPreference } from '@/hooks/useCursorPreference';
 
 type CursorMode = 'default' | 'pointer' | 'text';
 
@@ -15,15 +16,22 @@ export function CustomCursor() {
   const rafRef = useRef<number>(0);
   const [mode, setMode] = useState<CursorMode>('default');
   const [pressed, setPressed] = useState(false);
-  const [enabled, setEnabled] = useState(false);
+  const [active, setActive] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const { enabled } = useCursorPreference();
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    if (!enabled) {
+      document.documentElement.classList.remove('has-custom-cursor');
+      setActive(false);
+      return;
+    }
     const isTouch = window.matchMedia('(pointer: coarse)').matches;
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (isTouch || reduced) return;
 
-    setEnabled(true);
+    setActive(true);
     document.documentElement.classList.add('has-custom-cursor');
 
     const onMove = (e: MouseEvent) => {
@@ -49,11 +57,18 @@ export function CustomCursor() {
       if (dotRef.current) dotRef.current.style.opacity = '1';
       if (ringRef.current) ringRef.current.style.opacity = '1';
     };
+    // Hide cursor while user is keyboard-navigating so focus rings remain visible
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Tab') setHidden(true);
+    };
+    const onAnyMove = () => setHidden(false);
 
     window.addEventListener('mousemove', onMove);
+    window.addEventListener('mousemove', onAnyMove);
     window.addEventListener('mouseover', onOver);
     window.addEventListener('mousedown', onDown);
     window.addEventListener('mouseup', onUp);
+    window.addEventListener('keydown', onKeyDown);
     document.addEventListener('mouseleave', onLeave);
     document.addEventListener('mouseenter', onEnter);
 
@@ -72,16 +87,18 @@ export function CustomCursor() {
     return () => {
       cancelAnimationFrame(rafRef.current);
       window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mousemove', onAnyMove);
       window.removeEventListener('mouseover', onOver);
       window.removeEventListener('mousedown', onDown);
       window.removeEventListener('mouseup', onUp);
+      window.removeEventListener('keydown', onKeyDown);
       document.removeEventListener('mouseleave', onLeave);
       document.removeEventListener('mouseenter', onEnter);
       document.documentElement.classList.remove('has-custom-cursor');
     };
-  }, []);
+  }, [enabled]);
 
-  if (!enabled) return null;
+  if (!active) return null;
 
   const ringW = mode === 'pointer' ? 48 : mode === 'text' ? 4 : 32;
   const ringH = mode === 'text' ? 26 : ringW;
@@ -94,12 +111,15 @@ export function CustomCursor() {
       : 'transparent';
   const border = mode === 'text' ? '0' : '1.5px solid hsl(var(--primary) / 0.85)';
   const scale = pressed ? 0.85 : 1;
+  const opacity = hidden ? 0 : 1;
 
   return (
     <>
       <div
         ref={ringRef}
         aria-hidden
+        data-testid="custom-cursor-ring"
+        data-mode={mode}
         className="pointer-events-none fixed left-0 top-0 z-[10000] mix-blend-difference"
         style={{
           width: ringW,
@@ -112,11 +132,13 @@ export function CustomCursor() {
           scale: String(scale),
           willChange: 'transform',
           boxShadow: mode === 'pointer' ? '0 0 14px hsl(var(--primary) / 0.35)' : 'none',
+          opacity,
         }}
       />
       <div
         ref={dotRef}
         aria-hidden
+        data-testid="custom-cursor-dot"
         className="pointer-events-none fixed left-0 top-0 z-[10000]"
         style={{
           width: 6,
@@ -124,7 +146,7 @@ export function CustomCursor() {
           borderRadius: 999,
           background: 'hsl(var(--primary))',
           boxShadow: '0 0 8px hsl(var(--primary) / 0.8)',
-          opacity: mode === 'pointer' || mode === 'text' ? 0 : 1,
+          opacity: hidden || mode === 'pointer' || mode === 'text' ? 0 : 1,
           transition: 'opacity 150ms ease-out',
           willChange: 'transform',
         }}

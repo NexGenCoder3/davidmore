@@ -17,6 +17,11 @@ export function MagneticButton({ children, className, strength = 0.3 }: Magnetic
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!ref.current) return;
+    // Disable magnet on touch / small viewports for native feel
+    if (typeof window !== 'undefined') {
+      if (window.matchMedia('(pointer: coarse)').matches) return;
+      if (window.innerWidth < 768) return;
+    }
     const rect = ref.current.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
