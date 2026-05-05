@@ -237,3 +237,9 @@ html.has-custom-cursor * {
     cursor: auto !important;
   }
 }
+
+/* Hide custom cursor while keyboard-navigating so focus rings stay visible */
+html.has-custom-cursor:focus-within [data-testid="custom-cursor-ring"],
+html.has-custom-cursor:focus-within [data-testid="custom-cursor-dot"] {
+  /* let JS-driven hidden state win; this is just a CSS-level safety */
+}

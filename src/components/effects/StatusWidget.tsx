@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useCursorPreference } from '@/hooks/useCursorPreference';
 
 const statusMessages = [
   { text: 'Compiling portfolio... ██████ 100%', icon: '⚡' },
@@ -25,9 +26,10 @@ export function StatusWidget() {
   }, []);
 
   const message = statusMessages[currentIndex];
+  const { pref, toggle } = useCursorPreference();
 
   return (
-    <div className="fixed bottom-6 left-6 z-40 hidden lg:block">
+    <div className="fixed bottom-6 left-6 z-40 hidden lg:flex flex-col gap-2 items-start">
       <div className="relative overflow-hidden rounded-full px-4 py-2 bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] shadow-[0_4px_16px_rgba(0,0,0,0.2)]">
         <AnimatePresence mode="wait">
           <motion.div
@@ -43,6 +45,14 @@ export function StatusWidget() {
           </motion.div>
         </AnimatePresence>
       </div>
+      <button
+        type="button"
+        onClick={toggle}
+        aria-label={`Toggle custom cursor (currently ${pref})`}
+        className="rounded-full px-3 py-1 bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] font-mono text-[10px] text-hacker-green/70 hover:text-hacker-green hover:border-primary/40 transition-colors"
+      >
+        cursor: [{pref === 'on' ? 'custom' : 'native'}]
+      </button>
     </div>
   );
 }
