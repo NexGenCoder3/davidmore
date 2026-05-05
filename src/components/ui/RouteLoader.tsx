@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 const ROUTE_LABELS: Record<string, string> = {
@@ -14,33 +14,96 @@ const ROUTE_LABELS: Record<string, string> = {
   '/accessibility': 'accessibility',
 };
 
-const DURATION = 650;
+const DURATION = 600;
+const MIN_VISIBLE = 350;
+
+function useReducedMotion() {
+  const [reduced, setReduced] = useState(() =>
+    typeof window !== 'undefined' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+  );
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const m = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const cb = () => setReduced(m.matches);
+    m.addEventListener?.('change', cb);
+    return () => m.removeEventListener?.('change', cb);
+  }, []);
+  return reduced;
+}
 
 export function RouteLoader() {
   const location = useLocation();
   const [visible, setVisible] = useState(false);
   const [key, setKey] = useState(0);
-  const reduced =
-    typeof window !== 'undefined' &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reduced = useReducedMotion();
+  const firstMount = useRef(true);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const shownAtRef = useRef<number>(0);
+
+  // Static fallback for reduced motion
+  const [staticPulse, setStaticPulse] = useState(false);
 
   useEffect(() => {
-    if (reduced) return;
+    if (firstMount.current) {
+      firstMount.current = false;
+      return;
+    }
+
+    if (reduced) {
+      setStaticPulse(true);
+      const t = setTimeout(() => setStaticPulse(false), 250);
+      return () => clearTimeout(t);
+    }
+
+    // Cancel any pending hide
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
     setVisible(true);
     setKey((k) => k + 1);
-    const t = setTimeout(() => setVisible(false), DURATION);
-    return () => clearTimeout(t);
-  }, [location.pathname, reduced]);
+    shownAtRef.current = performance.now();
 
-  if (reduced) return null;
+    const elapsed = performance.now() - shownAtRef.current;
+    const remaining = Math.max(MIN_VISIBLE, DURATION - elapsed);
+
+    timeoutRef.current = setTimeout(() => {
+      setVisible(false);
+      timeoutRef.current = null;
+    }, remaining);
+
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+    };
+  }, [location.pathname, reduced]);
 
   const path = location.pathname;
   const label =
     ROUTE_LABELS[path] ??
     (path.startsWith('/blog/') ? `blog/${path.split('/').pop()}` : path.replace(/^\//, '') || 'route');
 
+  if (reduced) {
+    return (
+      <AnimatePresence>
+        {staticPulse && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.12 }}
+            aria-hidden
+            className="fixed top-0 left-0 right-0 z-[200] h-0.5 bg-primary"
+            data-testid="route-loader-static"
+          />
+        )}
+      </AnimatePresence>
+    );
+  }
+
   return (
-    <AnimatePresence>
+    <AnimatePresence mode="popLayout">
       {visible && (
         <motion.div
           key={key}
@@ -50,6 +113,7 @@ export function RouteLoader() {
           transition={{ duration: 0.18, ease: 'easeOut' }}
           className="fixed inset-0 z-[200] pointer-events-none flex items-center justify-center bg-black/85 backdrop-blur-sm"
           aria-hidden
+          data-testid="route-loader"
         >
           <div className="absolute inset-0 opacity-30 bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.4)_50%)] bg-[length:100%_3px]" />
 
