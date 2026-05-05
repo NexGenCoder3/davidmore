@@ -1,83 +1,83 @@
+# Add Terminal Loading Screen + Custom Animated Cursor
 
+Two missing features from the previous task, implemented surgically.
 
-# Elevate to Production-Grade Creative Portfolio
+## 1. Terminal Loading Screen Between Routes
 
-This is a real company/final year project -- every detail matters. Here's a comprehensive plan to bring it to the level of top western creative agency portfolios (like Linear, Vercel, Stripe, Awwwards winners) while keeping the hacker/terminal identity.
+A brief (~650ms) terminal-style overlay that appears on every route change, layered **above** the existing slat page transitions so both effects compose nicely.
 
-## Bug Fix: Terminal Close Button
+### New file: `src/components/ui/RouteLoader.tsx`
 
-The terminal toggle button (line 266-272 in CommandTerminal.tsx) only opens the terminal -- tapping it again does nothing. Fix: change `onClick={() => setIsOpen(true)}` to `onClick={() => setIsOpen(prev => !prev)}` so tapping the terminal icon toggles it open/closed on all screen sizes.
+- Listens to `useLocation().pathname`; on change, shows for 650ms then auto-fades
+- z-index `[200]` (existing slats are `[100]`, so loader sits on top — they play simultaneously)
+- Centered terminal panel:
+  - Title bar with red/yellow/green dots and `guest@dm:~$ load <route>`
+  - Three sequentially-revealed lines: `> mounting <route>...`, `> establishing connection... [OK]`, `> rendering view... [OK]`
+  - Animated progress bar filling 0→100% over the duration
+  - Pulsing cursor block
+- Scanline texture overlay for CRT vibe
+- `pointer-events-none` so it never blocks the underlying transition
+- Respects `prefers-reduced-motion` → returns null
 
-## Creative Enhancements
+### Wire-up in `src/App.tsx`
 
-### 1. Smooth Scroll-Triggered Reveal Animations (All Pages)
-Currently content just fades in minimally. Upgrade to staggered, scroll-triggered animations:
-- **Home sections**: Each section's heading, text, and CTAs animate in sequentially with stagger (0.1s between children) using `framer-motion`'s `staggerChildren`
-- **Project cards**: Stagger-in from bottom with `y: 40 -> 0` as they enter viewport
-- **Contact info cards**: Cascade in one by one
+Mount `<RouteLoader />` inside `<BrowserRouter>` (so it has access to `useLocation`), right next to `<ScrollToTop />`.
 
-### 2. Interactive Cursor Glow on Cards (Desktop)
-Add a radial gradient glow that follows the mouse cursor on project cards and glass cards -- like the Stripe/Linear card effect. The GlassCard already tracks mouse position but the effect is too subtle. Intensify it:
-- Make the specular highlight actually visible (`opacity-0 group-hover:opacity-100` needs the parent to have `group` class)
-- Add a green-tinted radial glow: `radial-gradient(600px at ${x}px ${y}px, rgba(34,197,94,0.06), transparent 40%)`
+## 2. Custom Animated Cursor
 
-### 3. Hero Section -- Animated Counter Stats Bar
-Add a floating stats bar below the hero terminal showing animated counters:
-- `8+ Projects` | `4+ Years` | `100% Passion` -- numbers count up when scrolled into view
-- Styled as a glassmorphic pill bar with terminal mono font
+### New file: `src/components/effects/CustomCursor.tsx`
 
-### 4. Smooth Page Section Transitions
-Add subtle dividers between Home page sections using animated SVG waves or gradient fades instead of plain `border-t border-border`. A thin animated gradient line that pulses with the hacker-green color.
+Two-layer cursor (desktop only):
+- **Inner dot** (6px green, glowing) — tracks mouse exactly via `transform: translate3d`
+- **Outer ring** (32px, primary border) — eases toward target with lerp 0.18 in a `requestAnimationFrame` loop
 
-### 5. "Available for Hire" Floating Badge
-The StatusWidget is hidden on mobile (`hidden lg:block`). Create a smaller, always-visible version -- a pulsing green dot with "Available" text in the header on mobile, showing availability status.
+State morphs based on hovered element:
+- **Default**: dot + thin ring
+- **Pointer** (over `a, button, [role=button]`, etc.): ring grows to 48px, fills with `primary/18`, glows; dot hides
+- **Text** (over `input`, `textarea`): ring becomes a thin vertical I-beam (4×26px, solid primary)
+- **Pressed** (mousedown): ring scales to 0.85 briefly
 
-### 6. Project Cards -- Tilt Effect (3D)
-Add a subtle 3D tilt effect to MasonryCard on hover using CSS `perspective` and `rotateX/rotateY` based on mouse position. This is the signature effect of modern portfolio sites (seen on Awwwards winners).
+Uses `mix-blend-difference` on the ring so it stays visible on any background.
 
-### 7. Testimonials -- Auto-Scrolling Marquee
-Replace the static grid with a horizontal auto-scrolling marquee (infinite scroll) for testimonials. Two rows scrolling in opposite directions. Much more dynamic and modern.
+### Disabled when:
+- Touch device: `(pointer: coarse)` matches
+- `prefers-reduced-motion: reduce` is set
 
-### 8. Mobile Navigation Upgrade
-The Sheet mobile menu is functional but plain. Enhance it:
-- Add staggered link animations (each link slides in from right with 50ms delay)
-- Add the terminal-style `>_` prefix before each nav link
-- Show current route with a green accent dot
+### Wire-up in `src/components/layout/Layout.tsx`
 
-### 9. Footer -- Interactive Terminal Line
-Make the footer terminal status bar interactive -- clicking on the directory path copies it, and the uptime counter has a tooltip showing "Session uptime".
+Add `<CustomCursor />` next to the existing `<CursorTrail />`. Both coexist — trail is `z-[9999]`, custom cursor is `z-[10000]`.
 
-### 10. Contact Page -- Animated Background
-Add a subtle NetworkGrid or particle effect behind the Contact page (currently plain background). Gives it depth and matches the hacker theme.
+### CSS in `src/index.css`
 
-## Files to Update
+Append:
+```css
+html.has-custom-cursor,
+html.has-custom-cursor * {
+  cursor: none !important;
+}
+@media (pointer: coarse) {
+  html.has-custom-cursor,
+  html.has-custom-cursor * {
+    cursor: auto !important;
+  }
+}
+```
 
-| File | Changes |
-|------|---------|
-| `CommandTerminal.tsx` | Fix toggle button to open AND close |
-| `MasonryCard.tsx` | Add 3D tilt effect on hover |
-| `GlassCard.tsx` | Fix and intensify cursor-tracking glow |
-| `Home.tsx` | Add stats counter bar, animated section dividers, marquee testimonials |
-| `HorizontalShowcase.tsx` | Enhance card interactions |
-| `Header.tsx` | Add availability badge on mobile, enhance mobile menu |
-| `TestimonialCard.tsx` | Refactor for marquee layout |
-| `Contact.tsx` | Add background particle effect |
-| `Footer.tsx` | Make status bar interactive |
-| `Layout.tsx` | Show NetworkGrid on all pages (not just inner) |
+The `CustomCursor` component adds the `has-custom-cursor` class on mount and removes it on unmount.
 
-## New Components
+## Verification
 
-| Component | Purpose |
-|-----------|---------|
-| `AnimatedCounter.tsx` | Count-up number animation for stats |
-| `TestimonialMarquee.tsx` | Infinite horizontal scroll testimonials |
-| `TiltCard.tsx` | Reusable 3D tilt wrapper |
-| `SectionDivider.tsx` | Animated gradient line between sections |
+After build I'll:
+1. Confirm `bunx tsc --noEmit` and `bun run build` pass
+2. Manually trace: navigate Home → Portfolio → About → confirm loader appears each time, sits above slats, both finish cleanly
+3. Confirm cursor morphs over the nav links, the magnetic CTA buttons, and the contact-form inputs
 
-## Technical Notes
-- All animations use `framer-motion` (already installed) and CSS transforms -- no heavy 3D libraries
-- Tilt effect uses pure CSS `transform: perspective(1000px) rotateX() rotateY()` driven by mouse events
-- Marquee uses CSS `@keyframes` with `translateX` for performance (no JS animation loop)
-- Counter uses `useInView` from framer-motion + `requestAnimationFrame` for smooth counting
-- All effects are disabled/reduced on mobile for performance (`prefers-reduced-motion` respected)
+## Files
 
+| File | Change |
+|---|---|
+| `src/components/ui/RouteLoader.tsx` | **new** — terminal loading overlay |
+| `src/components/effects/CustomCursor.tsx` | **new** — dot+ring cursor |
+| `src/App.tsx` | mount `<RouteLoader />` inside `BrowserRouter` |
+| `src/components/layout/Layout.tsx` | mount `<CustomCursor />` |
+| `src/index.css` | hide native cursor when custom cursor is active |
