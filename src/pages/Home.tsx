@@ -17,6 +17,7 @@ import { ParallaxSection } from '@/components/effects/ParallaxSection';
 import { MagneticButton } from '@/components/effects/MagneticButton';
 import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
 import { SectionDivider } from '@/components/ui/SectionDivider';
+import { MarketingShowcase } from '@/components/marketing/MarketingShowcase';
 import { projects } from '@/data/projects';
 
 const stagger = {
@@ -142,6 +143,9 @@ export default function Home() {
             </motion.div>
           </div>
         </section>
+
+        <SectionDivider />
+        <MarketingShowcase />
 
         <SectionDivider />
         <section className="py-16 md:py-24 lg:py-32 px-4 md:px-6 lg:px-8 bg-background">

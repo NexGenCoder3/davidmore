@@ -10,6 +10,7 @@ import { CursorTrail } from '@/components/effects/CursorTrail';
 import { CustomCursor } from '@/components/effects/CustomCursor';
 import { GradientOrbs } from '@/components/effects/GradientOrbs';
 import { NetworkGrid } from '@/components/effects/NetworkGrid';
+import { Scene3D } from '@/components/effects/Scene3D';
 import { StatusWidget } from '@/components/effects/StatusWidget';
 import { ScrollProgress } from '@/components/ui/ScrollProgress';
 import { useKonamiCode } from '@/hooks/useKonamiCode';
@@ -31,8 +32,9 @@ export function Layout({ children }: LayoutProps) {
       <CRTOverlay />
       <CursorTrail />
       <CustomCursor />
-      <GradientOrbs />
-      <NetworkGrid />
+        <GradientOrbs />
+        <NetworkGrid />
+        <Scene3D />
       <Header />
       <main 
         id="main-content" 

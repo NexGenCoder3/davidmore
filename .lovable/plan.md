@@ -1,70 +1,100 @@
-# Cinematic Polish: Harden Loader, Cursor & Add User Controls
+## Goal
+Two parallel tracks:
+1. Make every page feel as cinematic and 3D as Home, fix mobile spacing/overflow issues seen in the screenshots, and verify across all breakpoints.
+2. Add three new in-app marketing sections — hero poster, feature comparison chart, testimonial quote card — in monochrome-green + frosted-glass styling.
 
-Most of the items you listed (custom cursor, route loader, slat transitions, reduced-motion guards) are already wired in. The remaining gaps are **edge cases, user controls, tests, and cinematic refinement**. This plan tackles them surgically.
+---
 
-## 1. RouteLoader edge cases
+## Track A — Cinematic 3D + Responsive Polish
 
-File: `src/components/ui/RouteLoader.tsx`
+### A1. Shared 3D scene background (new)
+- New `src/components/effects/Scene3D.tsx` using `@react-three/fiber@^8.18` + `@react-three/drei@^9.122` + `three@^0.160`.
+- A reusable, lightweight scene: low-poly wireframe terrain or rotating green wireframe icosahedron with subtle bloom, anchored as a fixed background layer behind page content (z-index below CRT overlay, above page bg).
+- Auto-disables on `prefers-reduced-motion`, `pointer: coarse` + small viewport, and when WebGL unavailable (canvas context probe). CPU fallback = existing `NetworkGrid`.
+- Mounted once in `Layout.tsx` so all routes inherit it (no per-page double-mount, no flicker on route change).
+- DPR clamped to `[1, 1.5]`, `frameloop="demand"` updated on scroll/route change to keep mobile cool.
 
-Current bug: rapid navigation can leave the previous timeout running and an `<AnimatePresence>` mid-exit, causing flicker / stuck overlay.
+### A2. Per-page cinematic treatments
+Apply consistent motion vocabulary already established on Home to every page:
+- **Portfolio, About, Skills, Blog, Contact, Resume, ProjectDetail, BlogPost, Accessibility, NotFound**: add an entrance `LetterReveal` for the page H1, a one-shot vignette pulse, and a `ParallaxSection` wrapper around the hero block.
+- Convert primary cards (`ProjectCard`, `MasonryCard`, `BlogCard`, `TestimonialCard`, `SkillCategory`) to use a shared `Tilt3DCard` wrapper (new) — perspective hover tilt with `transform-style: preserve-3d`, depth-shadow, glare highlight. Disabled on touch + `prefers-reduced-motion`.
+- Section dividers and stat counters get `whileInView` reveal with `once: true` to avoid re-triggering.
 
+### A3. Mobile responsive sweep (priority: all breakpoints)
+Issues visible in screenshots: tag chips overflow card bounds, "min read" stat column too narrow causing 3-line wrap, Command Terminal toggle overlapping content, large blank padding under blog list.
 Fixes:
-- Track timeout in a `useRef`; clear it before scheduling a new one (already partially handled by cleanup, but the `key` bump can race with `exit` animation — make exit non-blocking with `mode="popLayout"`).
-- Cap minimum visible time at 350ms even on rapid changes so the slat transition (≈700ms) and the loader compose cleanly without "double animation" feel.
-- Skip the loader on the very first mount (boot sequence already covers that).
-- Guard `prefers-reduced-motion` reactively by listening to `matchMedia` change events instead of reading once.
+- `BlogCard.tsx`: switch tag row to `flex-wrap gap-1.5 max-w-full` with `overflow-hidden`; cap visible tags to 3 on `< 400px` with "+N" pill; widen the "min read" column or stack icon above text.
+- `Layout.tsx` / `Footer.tsx`: replace fixed bottom padding with `pb-[env(safe-area-inset-bottom)]`; remove the dead-space gap between last card and footer (`min-h-screen` → `min-h-[calc(100dvh-var(--header))]`).
+- `CommandTerminal.tsx` floating button: move out of card overlap zone on `<420px` (anchor to `bottom-20 right-3`, smaller hitbox).
+- `Header.tsx`: tighten mobile nav spacing, ensure logo + buttons fit within 360px without horizontal scroll.
+- Audit every page for `px-` values and standardize on `px-4 sm:px-6 lg:px-8`.
+- Add a global `overflow-x-clip` on `body` to prevent horizontal scroll.
 
-## 2. Custom cursor — user setting + a11y
+### A4. Verification
+- Run the existing Vitest suite + add 2 new tests:
+  - `Scene3D.test.tsx`: mounts on desktop, returns null on touch/reduced-motion.
+  - `Tilt3DCard.test.tsx`: applies tilt on hover, no-op on touch.
+- Browser verify at viewports: 360, 414, 768, 1024, 1440, 1920. Screenshot each and confirm no overflow, no double-loaders, no flicker between routes.
 
-Files: `src/components/effects/CustomCursor.tsx`, new `src/hooks/useCursorPreference.ts`, `src/components/layout/Header.tsx` (or Footer settings area).
+---
 
-- New hook `useCursorPreference()` reads/writes `localStorage["custom-cursor"]` (`'on' | 'off'`, default `on`).
-- `CustomCursor` early-returns when preference is `off`, touch device, or reduced-motion. It also removes `has-custom-cursor` class so the native cursor returns.
-- Add a small toggle in the existing `StatusWidget` (already a settings-style HUD) labeled `cursor: [native|custom]` so it stays on-theme.
-- Keyboard-nav fix: when any element receives `:focus-visible`, hide both ring & dot (via a `focus-within` listener that toggles a CSS class) so the focus ring is never obscured.
-- Ensure `pointer-events-none` is on the wrapper and verify `aria-hidden` (already set).
+## Track B — Three Marketing Sections (in-app)
 
-## 3. Reduced-motion fallback (verify + tighten)
+All built as components and composed into a new `<MarketingShowcase />` block on the Home page directly below the existing hero. Style: monochrome green + Liquid Glass (`backdrop-blur-xl`, `border-primary/20`, `bg-black/40`), no new colors.
 
-- `RouteLoader`: when reduced-motion, render a static 250ms green underline at the top of the viewport (clear page-change indicator) instead of returning `null`. Keeps UX legible without animation.
-- `CustomCursor`: stays disabled under reduced-motion (already correct).
-- `PageTransition`: already handles reduced-motion with a fade — leave as-is.
+### B1. `HeroPoster.tsx`
+- Full-width section with layered glass card.
+- Left: oversized headline using `LetterReveal` — "Build systems that ship." Sub: one-line value prop pulled from `developer.ts`.
+- Right: animated 3D wireframe DM monogram (reuses Scene3D primitives) with parallax on mouse-move.
+- Two CTAs: `View Work` → /portfolio, `Hire Me` → /contact (MagneticButton).
+- Conversion hooks: trust line ("Available · responds in 24h"), arrow scroll cue.
 
-## 4. Cinematic polish (building on existing work)
+### B2. `FeatureComparison.tsx`
+- Three-column glass table: **Typical Dev** / **Senior Dev** / **David More**.
+- Rows: Stack depth, Security mindset, Delivery speed, Communication, Post-launch support.
+- Cells use check/dash glyphs in green; David column has a glowing `ring-primary/60` highlight and a "Recommended" badge.
+- Mobile: table collapses to a stacked accordion (one card per persona), David's card open by default.
+- Reveal on scroll with staggered row fade-in.
 
-Small, high-impact additions — no new heavy libs:
-- **Loader → slat handoff timing**: shift slat transition `delay` reference so the loader fades out exactly as slats begin retracting. Tune `DURATION` 650ms → 600ms and add `exit` of 220ms.
-- **Hero cinematic intro** (`src/pages/Home.tsx`): add a one-shot subtle vignette pulse + letter-by-letter reveal on the H1 using existing `framer-motion` (no new deps).
-- **Section dividers**: ensure `SectionDivider` triggers via `whileInView` with `once: true` (verify, fix if not).
-- **CRT flicker on route change**: brief 80ms brightness pulse on `<main>` synced with loader entry — pure CSS keyframe, gated by reduced-motion.
-- **MagneticButton**: clamp magnet strength on small viewports (`<768px` → 0) so mobile feels native.
+### B3. `TestimonialQuoteCard.tsx`
+- Single large pull-quote card from highest-impact testimonial in `data/testimonials.ts`.
+- Layout: oversized green quote glyph, italic quote text using `TypingEffect` (one-shot), avatar + name + role + company, 5-star rating in green.
+- Subtle glass card with animated green gradient border (conic-gradient rotation, 8s).
+- Below: small "Read more testimonials →" link to a (existing or new) testimonials list.
 
-## 5. End-to-end tests
+### B4. Composition
+- `MarketingShowcase` stacks the three with `SectionDivider`s between them and respects the existing page rhythm.
+- Add 3D parallax depth between sections (each section moves at slightly different scroll speed via `useScroll`).
 
-Add Vitest + Testing Library setup (per existing testing guide) and unit-level integration tests — full Playwright e2e is out of scope for this pass; these cover the listed behaviors:
+---
 
-New files:
-- `vitest.config.ts`, `src/test/setup.ts`
-- `src/components/ui/RouteLoader.test.tsx`: mounts with `MemoryRouter`, asserts overlay appears on path change, disappears within 1s, handles 3 rapid changes without leaving overlay.
-- `src/components/effects/CustomCursor.test.tsx`: asserts disabled on touch (mock matchMedia), asserts mode switches to `pointer` when hovering an `<a>`, to `text` over `<input>`.
-- `src/hooks/useCursorPreference.test.ts`: localStorage round-trip.
+## Files
 
-## 6. Files
+**New**
+- `src/components/effects/Scene3D.tsx`
+- `src/components/effects/Tilt3DCard.tsx`
+- `src/components/effects/Tilt3DCard.test.tsx`
+- `src/components/effects/Scene3D.test.tsx`
+- `src/components/marketing/HeroPoster.tsx`
+- `src/components/marketing/FeatureComparison.tsx`
+- `src/components/marketing/TestimonialQuoteCard.tsx`
+- `src/components/marketing/MarketingShowcase.tsx`
 
-| File | Change |
-|---|---|
-| `src/components/ui/RouteLoader.tsx` | edit: rapid-nav guard, min-visible-time, reactive reduced-motion, static fallback |
-| `src/components/effects/CustomCursor.tsx` | edit: preference + focus-visible hide |
-| `src/hooks/useCursorPreference.ts` | new |
-| `src/components/effects/StatusWidget.tsx` | edit: add cursor toggle row |
-| `src/pages/Home.tsx` | edit: hero letter reveal + vignette pulse |
-| `src/components/effects/MagneticButton.tsx` | edit: mobile clamp |
-| `src/index.css` | edit: focus-visible cursor hide rule, CRT pulse keyframe |
-| `vitest.config.ts`, `src/test/setup.ts` | new |
-| `src/components/ui/RouteLoader.test.tsx` | new |
-| `src/components/effects/CustomCursor.test.tsx` | new |
-| `src/hooks/useCursorPreference.test.ts` | new |
+**Updated**
+- `package.json` (+ three, @react-three/fiber@^8.18, @react-three/drei@^9.122)
+- `src/components/layout/Layout.tsx`, `Header.tsx`, `Footer.tsx`
+- `src/components/blog/BlogCard.tsx`
+- `src/components/portfolio/ProjectCard.tsx`, `MasonryCard.tsx`
+- `src/components/skills/SkillCategory.tsx`
+- `src/components/testimonials/TestimonialCard.tsx`
+- `src/components/effects/CommandTerminal.tsx`
+- `src/pages/Home.tsx`, `Portfolio.tsx`, `About.tsx`, `Skills.tsx`, `Blog.tsx`, `BlogPost.tsx`, `Contact.tsx`, `Resume.tsx`, `ProjectDetail.tsx`, `Accessibility.tsx`, `NotFound.tsx`
+- `src/index.css` (safe-area insets, overflow-x-clip)
 
-## Verification
+---
 
-After implementation: run `bunx vitest run`, then manually navigate Home → Portfolio → About in quick succession and confirm no stuck overlay; toggle the cursor setting in StatusWidget; toggle OS reduced-motion and reload; tab through the nav with keyboard and confirm focus ring is fully visible.
+## Risks & mitigations
+- **3D perf on low-end mobile**: Scene3D auto-disables on `pointer: coarse` with viewport `<768px` AND on devices reporting `<4` `hardwareConcurrency`. Falls back to existing `NetworkGrid`.
+- **Bundle size**: Three.js adds ~150KB gzipped. Lazy-load Scene3D via `React.lazy` so initial paint isn't blocked.
+- **Tilt + custom cursor interaction**: ensure tilt cards mark themselves `data-cursor="pointer"` so the existing CustomCursor morphs correctly.
+- **Reduced motion**: every new effect short-circuits when the user prefers reduced motion.
