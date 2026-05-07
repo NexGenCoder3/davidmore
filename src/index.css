@@ -243,3 +243,15 @@ html.has-custom-cursor:focus-within [data-testid="custom-cursor-ring"],
 html.has-custom-cursor:focus-within [data-testid="custom-cursor-dot"] {
   /* let JS-driven hidden state win; this is just a CSS-level safety */
 }
+
+/* Prevent horizontal scroll on small screens */
+html, body {
+  overflow-x: clip;
+}
+
+/* Respect iOS safe-area at the bottom */
+@supports (padding: env(safe-area-inset-bottom)) {
+  body {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
