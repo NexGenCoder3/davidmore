@@ -265,7 +265,8 @@ export function CommandTerminal() {
       {/* Terminal toggle button */}
       <button
         onClick={() => setIsOpen(prev => !prev)}
-        className="fixed bottom-24 right-3 sm:bottom-20 sm:right-6 z-40 p-2.5 sm:p-3 rounded-lg bg-terminal-bg/90 backdrop-blur-md border border-hacker-green/30 text-hacker-green hover:text-hacker-green-glow hover:border-hacker-green/60 transition-all shadow-lg"
+        className="fixed bottom-28 right-3 sm:bottom-20 sm:right-6 z-40 p-2.5 sm:p-3 rounded-2xl bg-terminal-bg/90 backdrop-blur-md border border-hacker-green/30 text-hacker-green hover:text-hacker-green-glow hover:border-hacker-green/60 transition-all shadow-lg"
+        style={{ marginBottom: 'env(safe-area-inset-bottom, 0px)' }}
         aria-label="Open command terminal"
       >
         <Terminal className="size-5 animate-pulse" />

@@ -69,11 +69,11 @@ export function StatsCounter() {
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: i * 0.1 }}
         >
-          <GlassCard className="p-6 text-center" hoverEffect>
-            <div className="inline-flex items-center justify-center w-10 h-10 rounded-sm bg-primary/10 text-primary mb-3">
+          <GlassCard className="px-4 py-7 md:p-6 text-center min-h-[160px] flex flex-col items-center justify-center" hoverEffect>
+            <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary mb-3">
               {stat.icon}
             </div>
-            <div className="text-4xl md:text-5xl font-light tracking-tight text-foreground mb-1">
+            <div className="text-3xl sm:text-4xl md:text-5xl font-light tracking-tight text-foreground mb-1 leading-none">
               <AnimatedNumber target={stat.target} suffix={stat.suffix} />
             </div>
             <div className="text-sm text-muted-foreground font-light tracking-wide">

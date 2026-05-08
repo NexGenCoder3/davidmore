@@ -26,10 +26,10 @@ export function CategoryFilter({
             key={category.id}
             onClick={() => onCategoryChange(category.id)}
             className={cn(
-              'relative px-6 py-2.5 text-sm font-light tracking-wide rounded-sm transition-all duration-300',
+              'relative px-5 md:px-6 h-10 inline-flex items-center text-sm font-medium tracking-tight rounded-full transition-all duration-300',
               isActive
                 ? 'text-primary-foreground'
-                : 'text-muted-foreground hover:text-foreground border border-border hover:border-foreground/20'
+                : 'text-muted-foreground hover:text-foreground border border-border/60 hover:border-foreground/30 backdrop-blur-sm'
             )}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -41,7 +41,7 @@ export function CategoryFilter({
             {isActive && (
               <motion.div
                 layoutId="activeCategory"
-                className="absolute inset-0 bg-primary rounded-sm"
+                className="absolute inset-0 bg-primary rounded-full shadow-[0_0_24px_-4px_hsl(var(--primary)/0.55)]"
                 transition={{ type: "spring", stiffness: 380, damping: 30 }}
               />
             )}
