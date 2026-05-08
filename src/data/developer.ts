@@ -16,7 +16,6 @@ I pay attention to responsiveness, usability, and small details that make a big 
   education: 'Bachelor\'s Degree in Software Engineering (in progress)',
   location: 'Port Harcourt, Rivers State, Nigeria',
   email: 'ekeledavid39@gmail.com',
-  phone: '08089569377',
   availability: 'Available for internships, entry-level roles, and freelance projects',
   socialLinks: {
     github: 'https://github.com/NexGenCoder3'

@@ -40,7 +40,6 @@ export interface DeveloperInfo {
   education: string;
   location: string;
   email: string;
-  phone: string;
   availability: string;
   socialLinks: {
     instagram?: string;
@@ -101,10 +100,3 @@ export interface Testimonial {
   quote: string;
 }
 
-// Analytics
-export interface AnalyticsEvent {
-  page: string;
-  timestamp: number;
-  userAgent: string;
-  referrer: string;
-}

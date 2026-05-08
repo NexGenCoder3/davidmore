@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import emailjs from '@emailjs/browser';
+import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { motion } from 'framer-motion';
 import { Loader2, CheckCircle2 } from 'lucide-react';
+import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
 import {
   Form,
   FormControl,
@@ -23,9 +23,11 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { useContactGuard } from '@/hooks/useContactGuard';
 
-// Validation schema with security best practices
+const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY as string | undefined;
+
+// Mirrors the server-side schema in /api/contact.ts.
+// The server is the source of truth — this is a UX optimisation only.
 const contactFormSchema = z.object({
   name: z
     .string()
@@ -54,14 +56,15 @@ const contactFormSchema = z.object({
 type ContactFormValues = z.infer<typeof contactFormSchema>;
 
 /**
- * Contact form component with validation and error handling
- * Uses react-hook-form + zod for type-safe validation
+ * Editorial contact form. Submits to the /api/contact serverless route,
+ * which handles rate-limiting, Turnstile verification, and EmailJS dispatch.
+ * No secrets ever leave the server.
  */
 export function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-
-  const guard = useContactGuard();
+  const [turnstileToken, setTurnstileToken] = useState('');
+  const turnstileRef = useRef<TurnstileInstance | null>(null);
 
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
@@ -75,53 +78,58 @@ export function ContactForm() {
   });
 
   const onSubmit = async (data: ContactFormValues) => {
-    // Honeypot
+    // Client-side honeypot — silent success so bots learn nothing
     if (data.website && data.website.length > 0) {
       setIsSuccess(true);
       form.reset();
       return;
     }
-    const verdict = guard.check();
-    if (!verdict.ok) {
-      if (verdict.reason !== 'silent') {
-        form.setError('root', { message: verdict.reason || 'Submission blocked.' });
-      }
+
+    if (TURNSTILE_SITE_KEY && !turnstileToken) {
+      form.setError('root', { message: 'Verifying you are human… please wait a moment and try again.' });
       return;
     }
+
     setIsSubmitting(true);
 
     try {
-      await emailjs.send(
-        'service_sbquij3',
-        'template_utkw7p8',
-        {
-          from_name: data.name,
-          from_email: data.email,
-          project_type: data.projectType,
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          name: data.name,
+          email: data.email,
+          projectType: data.projectType,
           message: data.message,
-        },
-        'YiDqeN2Xbo5hv9gMv'
-      );
-      guard.recordSend();
-
-      // Show success state
-      setIsSuccess(true);
-      form.reset();
-
-      // Reset success message after 5 seconds
-      setTimeout(() => {
-        setIsSuccess(false);
-      }, 5000);
-    } catch (error) {
-      form.setError('root', {
-        message: 'Failed to send message. Please try again.',
+          website: data.website ?? '',
+          turnstileToken,
+        }),
       });
+
+      if (res.ok) {
+        setIsSuccess(true);
+        form.reset();
+        setTimeout(() => setIsSuccess(false), 5000);
+        return;
+      }
+
+      let serverMsg = 'Failed to send message. Please try again.';
+      try {
+        const data = (await res.json()) as { error?: string };
+        if (data.error && res.status === 429) serverMsg = data.error;
+      } catch {
+        // ignore parse errors
+      }
+      form.setError('root', { message: serverMsg });
+    } catch {
+      form.setError('root', { message: 'Network error. Please try again.' });
     } finally {
       setIsSubmitting(false);
+      turnstileRef.current?.reset();
+      setTurnstileToken('');
     }
   };
 
-  // Show success message
   if (isSuccess) {
     return (
       <motion.div
@@ -129,17 +137,19 @@ export function ContactForm() {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
+        role="status"
+        aria-live="polite"
       >
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
         >
-          <CheckCircle2 className="size-16 mx-auto text-primary" />
+          <CheckCircle2 className="size-16 mx-auto text-primary" aria-hidden="true" />
         </motion.div>
-        <h3 className="text-2xl font-light tracking-wide">Message Sent!</h3>
+        <h3 className="text-2xl font-light tracking-wide">Message Sent</h3>
         <p className="text-muted-foreground font-light leading-relaxed">
-          Thank you for reaching out. I'll get back to you as soon as possible.
+          {"Thank you for reaching out. I'll get back to you as soon as possible."}
         </p>
       </motion.div>
     );
@@ -147,59 +157,41 @@ export function ContactForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        {/* Name Field */}
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6" noValidate>
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-sm font-light tracking-wide">
-                Name
-              </FormLabel>
+              <FormLabel className="text-sm font-light tracking-wide">Name</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="Your full name"
-                  className="font-light"
-                  {...field}
-                />
+                <Input placeholder="Your full name" className="font-light" autoComplete="name" {...field} />
               </FormControl>
               <FormMessage className="text-xs font-light" />
             </FormItem>
           )}
         />
 
-        {/* Email Field */}
         <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-sm font-light tracking-wide">
-                Email
-              </FormLabel>
+              <FormLabel className="text-sm font-light tracking-wide">Email</FormLabel>
               <FormControl>
-                <Input
-                  type="email"
-                  placeholder="your.email@example.com"
-                  className="font-light"
-                  {...field}
-                />
+                <Input type="email" placeholder="your.email@example.com" className="font-light" autoComplete="email" {...field} />
               </FormControl>
               <FormMessage className="text-xs font-light" />
             </FormItem>
           )}
         />
 
-        {/* Project Type Select */}
         <FormField
           control={form.control}
           name="projectType"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-sm font-light tracking-wide">
-                Project Type
-              </FormLabel>
+              <FormLabel className="text-sm font-light tracking-wide">Project Type</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger className="font-light">
@@ -207,15 +199,9 @@ export function ContactForm() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent className="bg-popover z-50">
-                  <SelectItem value="web-development" className="font-light">
-                    Web Development
-                  </SelectItem>
-                  <SelectItem value="security" className="font-light">
-                    Security Research
-                  </SelectItem>
-                  <SelectItem value="consultation" className="font-light">
-                    Consultation
-                  </SelectItem>
+                  <SelectItem value="web-development" className="font-light">Web Development</SelectItem>
+                  <SelectItem value="security" className="font-light">Security Research</SelectItem>
+                  <SelectItem value="consultation" className="font-light">Consultation</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage className="text-xs font-light" />
@@ -223,15 +209,12 @@ export function ContactForm() {
           )}
         />
 
-        {/* Message Textarea */}
         <FormField
           control={form.control}
           name="message"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-sm font-light tracking-wide">
-                Message
-              </FormLabel>
+              <FormLabel className="text-sm font-light tracking-wide">Message</FormLabel>
               <FormControl>
                 <Textarea
                   placeholder="Tell me about your project..."
@@ -244,6 +227,19 @@ export function ContactForm() {
           )}
         />
 
+        {TURNSTILE_SITE_KEY && (
+          <div>
+            <Turnstile
+              ref={turnstileRef}
+              siteKey={TURNSTILE_SITE_KEY}
+              options={{ size: 'flexible', theme: 'auto' }}
+              onSuccess={setTurnstileToken}
+              onError={() => setTurnstileToken('')}
+              onExpire={() => setTurnstileToken('')}
+            />
+          </div>
+        )}
+
         {/* Honeypot field — hidden from users, visible to bots */}
         <div aria-hidden="true" style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, overflow: 'hidden' }}>
           <label>
@@ -252,14 +248,12 @@ export function ContactForm() {
           </label>
         </div>
 
-        {/* Root Error Message */}
         {form.formState.errors.root && (
-          <div className="text-sm text-destructive font-light">
+          <div className="text-sm text-destructive font-light" role="alert" aria-live="assertive">
             {form.formState.errors.root.message}
           </div>
         )}
 
-        {/* Submit Button */}
         <Button
           type="submit"
           className="w-full py-6 text-base font-light tracking-wide"
@@ -267,7 +261,7 @@ export function ContactForm() {
         >
           {isSubmitting ? (
             <>
-              <Loader2 className="mr-2 size-5 animate-spin" />
+              <Loader2 className="mr-2 size-5 animate-spin" aria-hidden="true" />
               Sending...
             </>
           ) : (

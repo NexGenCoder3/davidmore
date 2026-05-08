@@ -14,7 +14,6 @@ import { Scene3D } from '@/components/effects/Scene3D';
 import { StatusWidget } from '@/components/effects/StatusWidget';
 import { ScrollProgress } from '@/components/ui/ScrollProgress';
 import { useKonamiCode } from '@/hooks/useKonamiCode';
-import { useAnalytics } from '@/hooks/useAnalytics';
 
 interface LayoutProps {
   children: ReactNode;
@@ -24,7 +23,6 @@ export function Layout({ children }: LayoutProps) {
   const location = useLocation();
   const isHomepage = location.pathname === '/';
   const { activated } = useKonamiCode();
-  useAnalytics();
 
   return (
     <div className="min-h-screen flex flex-col">
