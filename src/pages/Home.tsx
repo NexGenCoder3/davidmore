@@ -5,11 +5,12 @@ import { testimonials } from '@/data/testimonials';
 import { ScrollIndicator } from '@/components/ui/ScrollIndicator';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { SEOHead } from '@/components/seo/SEOHead';
-import { ArrowRight, Terminal } from 'lucide-react';
+import { ArrowRight, Terminal, MapPin, Wifi } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { MatrixRain } from '@/components/effects/MatrixRain';
 import { GlitchText } from '@/components/effects/GlitchText';
 import { LetterReveal } from '@/components/effects/LetterReveal';
+import { TypingEffect } from '@/components/effects/TypingEffect';
 import { MasonryGrid } from '@/components/portfolio/MasonryGrid';
 import { HorizontalShowcase } from '@/components/portfolio/HorizontalShowcase';
 import { TestimonialMarquee } from '@/components/testimonials/TestimonialMarquee';
@@ -82,6 +83,26 @@ export default function Home() {
               </div>
 
               <div className="p-4 md:p-6 lg:p-8 font-mono space-y-3 md:space-y-4">
+                {/* Status bar */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.4, delay: 0.1 }}
+                  className="flex items-center gap-3 text-xs text-primary/50 border-b border-primary/10 pb-2 mb-1"
+                >
+                  <span className="flex items-center gap-1">
+                    <Wifi className="w-3 h-3 text-primary/70 animate-pulse" />
+                    <span className="text-primary/60">CONNECTED</span>
+                  </span>
+                  <span className="text-primary/20">|</span>
+                  <span className="flex items-center gap-1">
+                    <MapPin className="w-3 h-3" />
+                    {developerInfo.location}
+                  </span>
+                  <span className="text-primary/20">|</span>
+                  <span className="text-primary/60">{developerInfo.availability}</span>
+                </motion.div>
+
                 <div className="text-primary/60 text-xs md:text-sm">
                   <span className="text-primary">$</span> whoami
                 </div>
@@ -109,15 +130,34 @@ export default function Home() {
                     <GlitchText text={developerInfo.name.toUpperCase()} as="h1" glitchIntensity="medium" />
                   </motion.div>
                 </div>
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 1.5 }} className="space-y-2">
+
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 1.5 }} className="space-y-1.5">
                   <div className="text-primary/60 text-xs md:text-sm"><span className="text-primary">$</span> cat role.txt</div>
-                  <p className="text-lg md:text-xl lg:text-2xl text-primary/90">{developerInfo.tagline}</p>
+                  <p className="text-lg md:text-xl lg:text-2xl text-primary/90 font-semibold tracking-wide">
+                    {developerInfo.tagline}
+                  </p>
                 </motion.div>
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 2 }} className="space-y-2">
+
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 2 }} className="space-y-1.5">
                   <div className="text-primary/60 text-xs md:text-sm"><span className="text-primary">$</span> cat mission.txt</div>
-                  <p className="text-sm md:text-base lg:text-lg text-primary/70 max-w-2xl">{developerInfo.heroIntroduction}</p>
+                  <p className="text-sm md:text-base lg:text-lg text-primary/70 max-w-2xl leading-relaxed border-l-2 border-primary/30 pl-3">
+                    <TypingEffect
+                      text={developerInfo.heroIntroduction}
+                      delay={2200}
+                      speed={22}
+                      showCursor={false}
+                    />
+                  </p>
                 </motion.div>
-                <motion.div className="pt-2 md:pt-4 text-primary/40 text-sm" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 2.5 }}>
+
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 2.5 }} className="flex flex-wrap items-center gap-2 pt-1">
+                  <span className="text-primary/40 text-xs px-2 py-0.5 rounded border border-primary/20 bg-primary/5">React</span>
+                  <span className="text-primary/40 text-xs px-2 py-0.5 rounded border border-primary/20 bg-primary/5">TypeScript</span>
+                  <span className="text-primary/40 text-xs px-2 py-0.5 rounded border border-primary/20 bg-primary/5">Tailwind CSS</span>
+                  <span className="text-primary/40 text-xs px-2 py-0.5 rounded border border-primary/20 bg-primary/5">Vite</span>
+                </motion.div>
+
+                <motion.div className="pt-1 md:pt-2 text-primary/40 text-sm" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 2.8 }}>
                   <span className="text-primary">$</span> <span className="animate-pulse">█</span>
                 </motion.div>
               </div>
@@ -127,12 +167,12 @@ export default function Home() {
               className="mt-8 md:mt-12 w-full max-w-2xl mx-auto"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 3, duration: 0.8 }}
+              transition={{ delay: 3.2, duration: 0.8 }}
             >
-              <div className="flex items-center justify-center gap-6 md:gap-12 px-6 py-4 rounded-2xl bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.25)]">
+              <div className="flex items-center justify-center gap-6 md:gap-12 px-6 py-4 rounded-2xl bg-black/60 backdrop-blur-xl border border-primary/20 shadow-[0_0_30px_rgba(34,197,94,0.1),0_8px_32px_rgba(0,0,0,0.3)]">
                 <AnimatedCounter end={projects.length} suffix="+" label="Projects" />
                 <div className="w-px h-8 bg-primary/20" />
-                <AnimatedCounter end={1} suffix="" label="Main Focus" />
+                <AnimatedCounter end={2} suffix="+" label="Years Coding" />
                 <div className="w-px h-8 bg-primary/20" />
                 <AnimatedCounter end={100} suffix="%" label="Passion" />
               </div>
