@@ -1,9 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
-import emailjs from '@emailjs/browser';
 import { motion } from 'framer-motion';
 import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
 import { GlassCard } from '@/components/ui/GlassCard';
-import { useContactGuard } from '@/hooks/useContactGuard';
 
 type FormStep = 'name' | 'email' | 'type' | 'message' | 'sending' | 'done';
 
@@ -16,15 +14,17 @@ const tooManyLinks = (s: string) => (s.match(/https?:\/\//gi) || []).length > 2;
 const looksLikeSpamName = (s: string) => /https?:\/\/|www\.|<|>/i.test(s);
 
 /**
- * Terminal-styled interactive contact form where users
- * respond to sequential prompts like a CLI session.
+ * Terminal-styled CLI-like contact form.
  *
- * Anti-abuse layers:
- *  - Honeypot input
- *  - Time trap (min 3s to fill)
- *  - Per-browser cooldown + daily cap (localStorage)
- *  - Cloudflare Turnstile (when VITE_TURNSTILE_SITE_KEY is set)
- *  - Stricter input validation (no URLs in names, link cap in messages)
+ * Submits to /api/contact, which performs:
+ *   - server-side Turnstile verification
+ *   - Upstash Redis per-IP rate limiting
+ *   - EmailJS dispatch with credentials held server-side
+ *
+ * Client-side defenses are UX only:
+ *   - honeypot field
+ *   - basic input shape checks
+ *   - Turnstile widget gate before submit
  */
 export function TerminalContactForm() {
   const [step, setStep] = useState<FormStep>('name');
@@ -35,6 +35,7 @@ export function TerminalContactForm() {
   const [currentInput, setCurrentInput] = useState('');
   const [error, setError] = useState('');
   const [turnstileToken, setTurnstileToken] = useState<string>('');
+  const [honeypot, setHoneypot] = useState('');
   const [lines, setLines] = useState<{ text: string; type: 'system' | 'input' | 'error' | 'success' }[]>([
     { text: '$ contact --init', type: 'system' },
     { text: 'Initializing secure channel...', type: 'system' },
@@ -45,7 +46,6 @@ export function TerminalContactForm() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const turnstileRef = useRef<TurnstileInstance | null>(null);
-  const guard = useContactGuard();
 
   useEffect(() => {
     if (step === 'message') textareaRef.current?.focus();
@@ -93,17 +93,13 @@ export function TerminalContactForm() {
       if (value.length > 1000) return setError('Message must be less than 1000 characters');
       if (tooManyLinks(value)) return setError('Too many links in message — please describe in plain text.');
 
-      // Anti-abuse gates
-      const verdict = guard.check();
-      if (!verdict.ok) {
-        if (verdict.reason === 'silent') {
-          // Honeypot — fake success
-          addLine('Message transmitted successfully ✓', 'success');
-          setStep('done');
-          return;
-        }
-        return setError(verdict.reason || 'Submission blocked.');
+      // Honeypot — silent success
+      if (honeypot.trim().length > 0) {
+        addLine('Message transmitted successfully', 'success');
+        setStep('done');
+        return;
       }
+
       if (TURNSTILE_SITE_KEY && !turnstileToken) {
         return setError('Verifying you are human… please wait a moment and try again.');
       }
@@ -116,24 +112,38 @@ export function TerminalContactForm() {
       addLine('Encrypting message...', 'system');
 
       try {
-        await emailjs.send(
-          'service_sbquij3',
-          'template_utkw7p8',
-          {
-            from_name: name,
-            from_email: email,
-            project_type: projectType,
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            name,
+            email,
+            projectType,
             message: value,
-            turnstile_token: turnstileToken || 'none',
-          },
-          'YiDqeN2Xbo5hv9gMv'
-        );
-        guard.recordSend();
-        addLine('Message transmitted successfully ✓', 'success');
-        addLine('You will receive a response within 24-48 hours.', 'system');
-        setStep('done');
+            website: '',
+            turnstileToken,
+          }),
+        });
+        if (res.ok) {
+          addLine('Message transmitted successfully', 'success');
+          addLine('You will receive a response within 24-48 hours.', 'system');
+          setStep('done');
+        } else if (res.status === 429) {
+          let serverMsg = 'Rate limited. Please try again later.';
+          try {
+            const data = (await res.json()) as { error?: string };
+            if (data.error) serverMsg = data.error;
+          } catch {
+            // ignore
+          }
+          addLine(`ERROR: ${serverMsg}`, 'error');
+          setStep('done');
+        } else {
+          addLine('ERROR: Failed to transmit. Try again later.', 'error');
+          setStep('done');
+        }
       } catch {
-        addLine('ERROR: Failed to transmit. Try again later.', 'error');
+        addLine('ERROR: Network failure. Try again later.', 'error');
         setStep('done');
       } finally {
         turnstileRef.current?.reset();
@@ -187,6 +197,7 @@ export function TerminalContactForm() {
               line.type === 'input' ? 'text-hacker-green' :
               'text-hacker-green/60'
             }
+            role={line.type === 'error' ? 'alert' : undefined}
           >
             {line.text}
           </div>
@@ -200,7 +211,8 @@ export function TerminalContactForm() {
               type="text"
               tabIndex={-1}
               autoComplete="off"
-              onChange={(e) => guard.setHoneypot(e.target.value)}
+              value={honeypot}
+              onChange={(e) => setHoneypot(e.target.value)}
             />
           </label>
         </div>
@@ -214,7 +226,11 @@ export function TerminalContactForm() {
             <div className="text-hacker-green/60">
               <span className="text-hacker-green">$</span> {getPrompt()}
             </div>
-            {error && <div className="text-destructive text-xs">{error}</div>}
+            {error && (
+              <div className="text-destructive text-xs" role="alert" aria-live="assertive">
+                {error}
+              </div>
+            )}
             <div className="flex items-start gap-2">
               <span className="text-hacker-green mt-1">{'>'}</span>
               {step === 'message' ? (
@@ -232,6 +248,7 @@ export function TerminalContactForm() {
                     className="flex-1 bg-transparent border-none outline-none text-hacker-green caret-hacker-green-glow resize-none min-h-[80px] placeholder:text-hacker-green/30"
                     maxLength={1000}
                     placeholder="Type your message..."
+                    aria-label="Message"
                     autoFocus
                   />
                   {TURNSTILE_SITE_KEY && (
@@ -263,6 +280,7 @@ export function TerminalContactForm() {
                   className="flex-1 bg-transparent border-none outline-none text-hacker-green caret-hacker-green-glow placeholder:text-hacker-green/30"
                   maxLength={step === 'email' ? 255 : 100}
                   placeholder={step === 'type' ? '1, 2, or 3' : ''}
+                  aria-label={getPrompt()}
                   autoFocus
                 />
               )}

@@ -30,7 +30,7 @@ export default function Resume() {
               </h1>
               <p className="text-hacker-green/70 text-sm md:text-base print:text-gray-600">{developerInfo.tagline}</p>
               <div className="text-hacker-green/50 text-xs md:text-sm mt-2 space-y-1 print:text-gray-500">
-                <p className="break-words">📍 {developerInfo.location} • 📧 {developerInfo.email} • 📱 {developerInfo.phone}</p>
+                <p className="break-words">{developerInfo.location} • {developerInfo.email}</p>
                 {developerInfo.socialLinks.github && <p className="break-all">GitHub: {developerInfo.socialLinks.github}</p>}
               </div>
             </div>

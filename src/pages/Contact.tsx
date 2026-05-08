@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin } from 'lucide-react';
+import { Mail, MapPin } from 'lucide-react';
 import { developerInfo } from '@/data/developer';
 import { Separator } from '@/components/ui/separator';
 import { SEOHead } from '@/components/seo/SEOHead';
@@ -102,22 +102,6 @@ export default function Contact() {
                           <p className="text-sm font-light tracking-wide text-muted-foreground">Email</p>
                           <a href={`mailto:${developerInfo.email}`} className="text-sm md:text-base font-light hover:text-muted-foreground transition-colors break-all">
                             {developerInfo.email}
-                          </a>
-                        </div>
-                      </div>
-                    </GlassCard>
-                  </motion.div>
-
-                  <motion.div variants={fadeUp}>
-                    <GlassCard className="p-4">
-                      <div className="flex items-start gap-3 md:gap-4">
-                        <div className="p-2.5 md:p-3 rounded-sm bg-primary/10">
-                          <Phone className="size-4 md:size-5 text-primary" />
-                        </div>
-                        <div className="space-y-1">
-                          <p className="text-sm font-light tracking-wide text-muted-foreground">Phone</p>
-                          <a href={`tel:${developerInfo.phone}`} className="text-sm md:text-base font-light hover:text-muted-foreground transition-colors">
-                            {developerInfo.phone}
                           </a>
                         </div>
                       </div>
