@@ -14,6 +14,7 @@ import { AnimatePresence } from "framer-motion";
 import { lazy, Suspense, useState, useEffect } from "react";
 import { ScrollToTop } from "@/components/utils/ScrollToTop";
 import { RouteLoader } from "@/components/ui/RouteLoader";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 // Code-split route components for better performance
 const Index = lazy(() => import("./pages/Index"));
@@ -169,6 +170,7 @@ const App = () => {
                 </Suspense>
               </Layout>
             </BrowserRouter>
+            <SpeedInsights />
           </TooltipProvider>
         </ThemeProvider>
       </QueryClientProvider>
