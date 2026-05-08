@@ -23,6 +23,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
+import { useContactGuard } from '@/hooks/useContactGuard';
 
 // Validation schema with security best practices
 const contactFormSchema = z.object({
@@ -30,7 +31,8 @@ const contactFormSchema = z.object({
     .string()
     .trim()
     .min(2, { message: 'Name must be at least 2 characters' })
-    .max(100, { message: 'Name must be less than 100 characters' }),
+    .max(100, { message: 'Name must be less than 100 characters' })
+    .refine((v) => !/https?:\/\/|www\.|<|>/i.test(v), { message: 'Name cannot contain links' }),
   email: z
     .string()
     .trim()
