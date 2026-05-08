@@ -244,6 +244,14 @@ export function ContactForm() {
           )}
         />
 
+        {/* Honeypot field — hidden from users, visible to bots */}
+        <div aria-hidden="true" style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, overflow: 'hidden' }}>
+          <label>
+            Website (leave blank)
+            <input type="text" tabIndex={-1} autoComplete="off" {...form.register('website')} />
+          </label>
+        </div>
+
         {/* Root Error Message */}
         {form.formState.errors.root && (
           <div className="text-sm text-destructive font-light">
