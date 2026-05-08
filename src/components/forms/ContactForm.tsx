@@ -45,7 +45,10 @@ const contactFormSchema = z.object({
     .string()
     .trim()
     .min(10, { message: 'Message must be at least 10 characters' })
-    .max(1000, { message: 'Message must be less than 1000 characters' }),
+    .max(1000, { message: 'Message must be less than 1000 characters' })
+    .refine((v) => (v.match(/https?:\/\//gi) || []).length <= 2, { message: 'Too many links — please describe in plain text.' }),
+  // Honeypot — must remain empty
+  website: z.string().max(0, { message: 'Spam detected' }).optional().or(z.literal('')),
 });
 
 type ContactFormValues = z.infer<typeof contactFormSchema>;
@@ -58,6 +61,8 @@ export function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
+  const guard = useContactGuard();
+
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
     defaultValues: {
@@ -65,12 +70,26 @@ export function ContactForm() {
       email: '',
       projectType: undefined,
       message: '',
+      website: '',
     },
   });
 
   const onSubmit = async (data: ContactFormValues) => {
+    // Honeypot
+    if (data.website && data.website.length > 0) {
+      setIsSuccess(true);
+      form.reset();
+      return;
+    }
+    const verdict = guard.check();
+    if (!verdict.ok) {
+      if (verdict.reason !== 'silent') {
+        form.setError('root', { message: verdict.reason || 'Submission blocked.' });
+      }
+      return;
+    }
     setIsSubmitting(true);
-    
+
     try {
       await emailjs.send(
         'service_sbquij3',
@@ -83,6 +102,7 @@ export function ContactForm() {
         },
         'YiDqeN2Xbo5hv9gMv'
       );
+      guard.recordSend();
 
       // Show success state
       setIsSuccess(true);
