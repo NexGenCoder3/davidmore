@@ -4,7 +4,7 @@ import portraitImage from '@/assets/portrait.png';
 export const developerInfo: DeveloperInfo = {
   name: 'David More-Ekele',
   tagline: 'Software Engineering Student & Front-End Developer',
-  heroIntroduction: 'Building responsive, user-focused web applications and sharpening my skills through real projects.',
+  heroIntroduction: 'I craft fast, accessible, and visually sharp web applications — turning ideas into real products with clean code and a relentless focus on user experience.',
   biography: `David More-Ekele is a final-year Software Engineering student based in Port Harcourt, Rivers State, Nigeria. He focuses on building practical web applications with clean interfaces, responsive layouts, and modern front-end tools.
 
 He enjoys turning ideas into working products and learning by shipping projects. His background includes SIWES industrial training and hands-on work with React, TypeScript, Vite, Tailwind CSS, and shadcn/ui.`,
