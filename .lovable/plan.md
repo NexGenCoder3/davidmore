@@ -1,100 +1,85 @@
-## Goal
-Two parallel tracks:
-1. Make every page feel as cinematic and 3D as Home, fix mobile spacing/overflow issues seen in the screenshots, and verify across all breakpoints.
-2. Add three new in-app marketing sections — hero poster, feature comparison chart, testimonial quote card — in monochrome-green + frosted-glass styling.
+# Plan: Security hardening, portrait swap, button refresh, polish pass
 
----
+## 1. Replace portrait image (camera/woman → suit photo)
 
-## Track A — Cinematic 3D + Responsive Polish
+- Copy `user-uploads://file_000000000858720aba3a870c39cf9bc0.png` into `src/assets/portrait.png`.
+- Update `src/data/developer.ts` → `portraitImage` to the imported asset.
+- Verify `About.tsx` and `SEOHead` pick it up with no other Unsplash references left.
 
-### A1. Shared 3D scene background (new)
-- New `src/components/effects/Scene3D.tsx` using `@react-three/fiber@^8.18` + `@react-three/drei@^9.122` + `three@^0.160`.
-- A reusable, lightweight scene: low-poly wireframe terrain or rotating green wireframe icosahedron with subtle bloom, anchored as a fixed background layer behind page content (z-index below CRT overlay, above page bg).
-- Auto-disables on `prefers-reduced-motion`, `pointer: coarse` + small viewport, and when WebGL unavailable (canvas context probe). CPU fallback = existing `NetworkGrid`.
-- Mounted once in `Layout.tsx` so all routes inherit it (no per-page double-mount, no flicker on route change).
-- DPR clamped to `[1, 1.5]`, `frameloop="demand"` updated on scroll/route change to keep mobile cool.
+## 2. Contact form abuse protection
 
-### A2. Per-page cinematic treatments
-Apply consistent motion vocabulary already established on Home to every page:
-- **Portfolio, About, Skills, Blog, Contact, Resume, ProjectDetail, BlogPost, Accessibility, NotFound**: add an entrance `LetterReveal` for the page H1, a one-shot vignette pulse, and a `ParallaxSection` wrapper around the hero block.
-- Convert primary cards (`ProjectCard`, `MasonryCard`, `BlogCard`, `TestimonialCard`, `SkillCategory`) to use a shared `Tilt3DCard` wrapper (new) — perspective hover tilt with `transform-style: preserve-3d`, depth-shadow, glare highlight. Disabled on touch + `prefers-reduced-motion`.
-- Section dividers and stat counters get `whileInView` reveal with `once: true` to avoid re-triggering.
+EmailJS credentials live in the client bundle by design (EmailJS public keys are allow-listed by domain), but bots can still drain the quota. We will layer ad‑hoc client-side defences. **Note:** Lovable's backend has no proper rate-limiting primitives, so true per-IP throttling is not part of this plan — I'll flag this clearly. If you want server-side enforcement later, the right move is to migrate the send through a Lovable Cloud edge function.
 
-### A3. Mobile responsive sweep (priority: all breakpoints)
-Issues visible in screenshots: tag chips overflow card bounds, "min read" stat column too narrow causing 3-line wrap, Command Terminal toggle overlapping content, large blank padding under blog list.
-Fixes:
-- `BlogCard.tsx`: switch tag row to `flex-wrap gap-1.5 max-w-full` with `overflow-hidden`; cap visible tags to 3 on `< 400px` with "+N" pill; widen the "min read" column or stack icon above text.
-- `Layout.tsx` / `Footer.tsx`: replace fixed bottom padding with `pb-[env(safe-area-inset-bottom)]`; remove the dead-space gap between last card and footer (`min-h-screen` → `min-h-[calc(100dvh-var(--header))]`).
-- `CommandTerminal.tsx` floating button: move out of card overlap zone on `<420px` (anchor to `bottom-20 right-3`, smaller hitbox).
-- `Header.tsx`: tighten mobile nav spacing, ensure logo + buttons fit within 360px without horizontal scroll.
-- Audit every page for `px-` values and standardize on `px-4 sm:px-6 lg:px-8`.
-- Add a global `overflow-x-clip` on `body` to prevent horizontal scroll.
+Changes to `src/components/forms/TerminalContactForm.tsx` (and `ContactForm.tsx`):
 
-### A4. Verification
-- Run the existing Vitest suite + add 2 new tests:
-  - `Scene3D.test.tsx`: mounts on desktop, returns null on touch/reduced-motion.
-  - `Tilt3DCard.test.tsx`: applies tilt on hover, no-op on touch.
-- Browser verify at viewports: 360, 414, 768, 1024, 1440, 1920. Screenshot each and confirm no overflow, no double-loaders, no flicker between routes.
+- **Honeypot field**: hidden `<input name="website">` with `tabIndex={-1}`, `autoComplete="off"`, `aria-hidden`. If filled, silently "succeed" without sending.
+- **Time-trap**: record mount timestamp; reject submissions completed in < 3 s.
+- **Per-browser cooldown**: localStorage key `contact:lastSent`. Block resubmits within 60 s and limit to 3 sends per 24 h. Show a friendly terminal line `ERROR: cooldown active (Xs remaining)`.
+- **Cloudflare Turnstile (invisible)**: add `@marsidev/react-turnstile` and render an invisible widget. Submit only fires after a token is returned. Site key stored as `VITE_TURNSTILE_SITE_KEY` (publishable, safe in bundle). Token is sent as `turnstile_token` template param so EmailJS receives it (validation is soft — without a backend we can't verify, but the widget itself blocks most bots).
+- **Input hardening**: tighten zod regex (no URLs in `name`, max consecutive whitespace, strip control chars). Reject messages with > 3 URLs.
 
----
+I'll mention the no-backend-rate-limiting caveat in the response and offer to follow up with a proper edge-function-based send + Turnstile verification.
 
-## Track B — Three Marketing Sections (in-app)
+## 3. Curvier, more modern buttons (SaaS/dev tone)
 
-All built as components and composed into a new `<MarketingShowcase />` block on the Home page directly below the existing hero. Style: monochrome green + Liquid Glass (`backdrop-blur-xl`, `border-primary/20`, `bg-black/40`), no new colors.
+- `src/components/ui/button.tsx`:
+  - Base radius `rounded-md` → `rounded-full` for `default`/`secondary`/`destructive`, `rounded-2xl` for `outline`.
+  - Add `font-medium tracking-tight`, subtle `shadow-[0_0_0_1px_rgba(34,197,94,0.15),0_8px_24px_-12px_rgba(34,197,94,0.4)]` on default.
+  - Add `hover:scale-[1.02] active:scale-[0.98] transition-all duration-200`.
+  - New gradient variant `glow`: `bg-gradient-to-b from-hacker-green to-hacker-green/80 text-black hover:shadow-[0_0_24px_rgba(34,197,94,0.45)]`.
+  - Sizes: `h-10` → `h-11` for default, `lg` → `h-12 px-9`, `sm` → `h-9 px-4`.
+- Audit ad-hoc buttons (terminal "Send [Ctrl+Enter]", category filter chips, hero CTAs) to use `rounded-full` and the new glow variant where they are primary.
 
-### B1. `HeroPoster.tsx`
-- Full-width section with layered glass card.
-- Left: oversized headline using `LetterReveal` — "Build systems that ship." Sub: one-line value prop pulled from `developer.ts`.
-- Right: animated 3D wireframe DM monogram (reuses Scene3D primitives) with parallax on mouse-move.
-- Two CTAs: `View Work` → /portfolio, `Hire Me` → /contact (MagneticButton).
-- Conversion hooks: trust line ("Available · responds in 24h"), arrow scroll cue.
+## 4. Reverse-engineered polish (bugs visible in screenshots)
 
-### B2. `FeatureComparison.tsx`
-- Three-column glass table: **Typical Dev** / **Senior Dev** / **David More**.
-- Rows: Stack depth, Security mindset, Delivery speed, Communication, Post-launch support.
-- Cells use check/dash glyphs in green; David column has a glowing `ring-primary/60` highlight and a "Recommended" badge.
-- Mobile: table collapses to a stacked accordion (one card per persona), David's card open by default.
-- Reveal on scroll with staggered row fade-in.
+```text
+[About page mobile]   white gradient band above portrait — caused by
+                      vignette pulse leaking into the section. Fix by
+                      scoping the radial gradient to the hero only.
+[Portfolio mobile]    "12+" stat is clipped — fixed-height card cuts the
+                      counter. Switch to min-h + py to allow growth.
+[Header mobile]       "Available" pill + theme + menu overflow at 360px.
+                      Hide pill < sm:, show small green dot instead.
+[Filter chips]        Touch targets < 40px on mobile. Bump to h-10 and
+                      rounded-full for parity with new button system.
+[Command terminal]    Toggle button overlaps Portfolio "+N" badge. Move
+                      to bottom-28 on mobile, keep bottom-24 desktop.
+[Layout]              Some pages still allow horizontal scroll on iOS.
+                      Add overscroll-behavior-x: contain on body.
+```
 
-### B3. `TestimonialQuoteCard.tsx`
-- Single large pull-quote card from highest-impact testimonial in `data/testimonials.ts`.
-- Layout: oversized green quote glyph, italic quote text using `TypingEffect` (one-shot), avatar + name + role + company, 5-star rating in green.
-- Subtle glass card with animated green gradient border (conic-gradient rotation, 8s).
-- Below: small "Read more testimonials →" link to a (existing or new) testimonials list.
+## 5. GitHub sync
 
-### B4. Composition
-- `MarketingShowcase` stacks the three with `SectionDivider`s between them and respects the existing page rhythm.
-- Add 3D parallax depth between sections (each section moves at slightly different scroll speed via `useScroll`).
+Git is managed by Lovable automatically — every change in this loop is committed and pushed to your connected GitHub repo. No manual sync needed. I'll confirm in the final response.
 
----
+## Technical details
 
-## Files
+**New deps**: `@marsidev/react-turnstile` (~3 kB).
 
-**New**
-- `src/components/effects/Scene3D.tsx`
-- `src/components/effects/Tilt3DCard.tsx`
-- `src/components/effects/Tilt3DCard.test.tsx`
-- `src/components/effects/Scene3D.test.tsx`
-- `src/components/marketing/HeroPoster.tsx`
-- `src/components/marketing/FeatureComparison.tsx`
-- `src/components/marketing/TestimonialQuoteCard.tsx`
-- `src/components/marketing/MarketingShowcase.tsx`
+**New env (publishable, safe to commit)**:
+```
+VITE_TURNSTILE_SITE_KEY=<your Cloudflare Turnstile site key>
+```
+I'll wire the component to render only when the env var is set, so the form keeps working in dev without a key (honeypot + time-trap + cooldown still apply).
 
-**Updated**
-- `package.json` (+ three, @react-three/fiber@^8.18, @react-three/drei@^9.122)
-- `src/components/layout/Layout.tsx`, `Header.tsx`, `Footer.tsx`
-- `src/components/blog/BlogCard.tsx`
-- `src/components/portfolio/ProjectCard.tsx`, `MasonryCard.tsx`
-- `src/components/skills/SkillCategory.tsx`
-- `src/components/testimonials/TestimonialCard.tsx`
+**Files to be created**
+- `src/assets/portrait.png` (copied from upload)
+- `src/hooks/useContactGuard.ts` (honeypot + time-trap + cooldown helpers)
+
+**Files to be edited**
+- `src/data/developer.ts`
+- `src/components/forms/TerminalContactForm.tsx`
+- `src/components/forms/ContactForm.tsx`
+- `src/components/ui/button.tsx`
+- `src/components/portfolio/CategoryFilter.tsx`
+- `src/components/portfolio/StatsCounter.tsx`
+- `src/components/layout/Header.tsx`
 - `src/components/effects/CommandTerminal.tsx`
-- `src/pages/Home.tsx`, `Portfolio.tsx`, `About.tsx`, `Skills.tsx`, `Blog.tsx`, `BlogPost.tsx`, `Contact.tsx`, `Resume.tsx`, `ProjectDetail.tsx`, `Accessibility.tsx`, `NotFound.tsx`
-- `src/index.css` (safe-area insets, overflow-x-clip)
+- `src/index.css` (overscroll, scoped vignette)
+- `.env.example`
 
----
+**What I will NOT do**
+- Backend/IP rate limiting (no primitives available — would be ad-hoc and ineffective).
+- Server-side Turnstile token verification (requires the edge-function migration mentioned above; happy to do as a follow-up if you confirm).
 
-## Risks & mitigations
-- **3D perf on low-end mobile**: Scene3D auto-disables on `pointer: coarse` with viewport `<768px` AND on devices reporting `<4` `hardwareConcurrency`. Falls back to existing `NetworkGrid`.
-- **Bundle size**: Three.js adds ~150KB gzipped. Lazy-load Scene3D via `React.lazy` so initial paint isn't blocked.
-- **Tilt + custom cursor interaction**: ensure tilt cards mark themselves `data-cursor="pointer"` so the existing CustomCursor morphs correctly.
-- **Reduced motion**: every new effect short-circuits when the user prefers reduced motion.
+After implementation I'll run the existing Vitest suite and verify the About + Portfolio + Contact pages at 360, 768, and 1280 widths.

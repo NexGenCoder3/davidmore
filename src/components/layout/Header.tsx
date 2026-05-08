@@ -89,10 +89,10 @@ export function Header() {
 
           {/* Mobile Menu */}
           <div className="md:hidden flex items-center gap-2">
-            {/* Availability badge - mobile */}
+            {/* Availability badge - mobile (compact below 380px) */}
             <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-primary/10 border border-primary/20">
               <span className="size-1.5 rounded-full bg-primary animate-pulse" />
-              <span className="text-[10px] font-mono text-primary/80">Available</span>
+              <span className="text-[10px] font-mono text-primary/80 hidden [@media(min-width:380px)]:inline">Available</span>
             </div>
             <ThemeToggle className={isTransparent ? 'text-white hover:bg-white/10' : ''} />
             <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
