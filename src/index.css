@@ -247,6 +247,7 @@ html.has-custom-cursor:focus-within [data-testid="custom-cursor-dot"] {
 /* Prevent horizontal scroll on small screens */
 html, body {
   overflow-x: clip;
+  overscroll-behavior-x: contain;
 }
 
 /* Respect iOS safe-area at the bottom */
