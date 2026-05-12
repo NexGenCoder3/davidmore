@@ -35,7 +35,11 @@ export default function Home() {
 
  return (
  <>
- <SEOHead />
+      <SEOHead
+        title="Software Engineer & Front-End Developer"
+        description="David More-Ekele builds fast, secure, cinematic web experiences. Explore featured projects, a hacker-themed portfolio, and a comparison of what shipping with David looks like."
+        image="/og.jpg"
+      />
  <MatrixRain />
 
  <div className="min-h-screen relative z-10">
