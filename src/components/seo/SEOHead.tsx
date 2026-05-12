@@ -35,48 +35,83 @@ export function SEOHead({
   const fullUrl = `${baseUrl}${location.pathname}`;
 
   useEffect(() => {
-    // Update document title
     document.title = fullTitle;
 
-    // Update or create meta tags
     const updateMetaTag = (name: string, content: string, isProperty = false) => {
       const attribute = isProperty ? 'property' : 'name';
       let element = document.querySelector(`meta[${attribute}="${name}"]`);
-      
       if (!element) {
         element = document.createElement('meta');
         element.setAttribute(attribute, name);
         document.head.appendChild(element);
       }
-      
       element.setAttribute('content', content);
     };
 
-    // Standard meta tags
+    const upsertLink = (rel: string, href: string) => {
+      let el = document.querySelector(`link[rel="${rel}"]`) as HTMLLinkElement | null;
+      if (!el) {
+        el = document.createElement('link');
+        el.setAttribute('rel', rel);
+        document.head.appendChild(el);
+      }
+      el.setAttribute('href', href);
+    };
+
+    // Resolve image to absolute URL so crawlers fetch it correctly
+    const absoluteImage = image.startsWith('http') ? image : `${baseUrl}${image.startsWith('/') ? '' : '/'}${image}`;
+
+    // Standard
     updateMetaTag('description', fullDescription);
-    
-    // Open Graph tags
+
+    // Open Graph
     updateMetaTag('og:title', fullTitle, true);
     updateMetaTag('og:description', fullDescription, true);
     updateMetaTag('og:type', type, true);
     updateMetaTag('og:url', fullUrl, true);
-    updateMetaTag('og:image', image, true);
+    updateMetaTag('og:image', absoluteImage, true);
+    updateMetaTag('og:image:width', '1200', true);
+    updateMetaTag('og:image:height', '630', true);
+    updateMetaTag('og:image:alt', fullTitle, true);
+    updateMetaTag('og:locale', 'en_US', true);
     updateMetaTag('og:site_name', developerInfo.name, true);
-    
-    // Twitter Card tags
+
+    // Twitter
     updateMetaTag('twitter:card', 'summary_large_image');
     updateMetaTag('twitter:title', fullTitle);
     updateMetaTag('twitter:description', fullDescription);
-    updateMetaTag('twitter:image', image);
+    updateMetaTag('twitter:image', absoluteImage);
+    updateMetaTag('twitter:image:alt', fullTitle);
 
-    // Additional SEO tags
+    // SEO basics
     updateMetaTag('author', developerInfo.name);
     updateMetaTag('keywords', `developer, hacker, security researcher, ${developerInfo.name}, full-stack developer, ${developerInfo.tagline}`);
-    
-    if (noindex) {
-      updateMetaTag('robots', 'noindex, nofollow');
-    }
-  }, [fullTitle, fullDescription, fullUrl, image, type, noindex]);
+    upsertLink('canonical', fullUrl);
+    updateMetaTag('robots', noindex ? 'noindex, nofollow' : 'index, follow');
+
+    // JSON-LD structured data — replaced per render
+    const ldId = 'seo-jsonld';
+    document.getElementById(ldId)?.remove();
+    const ld = document.createElement('script');
+    ld.type = 'application/ld+json';
+    ld.id = ldId;
+    ld.text = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': type === 'article' ? 'Article' : 'WebSite',
+      name: fullTitle,
+      headline: fullTitle,
+      description: fullDescription,
+      url: fullUrl,
+      image: absoluteImage,
+      author: {
+        '@type': 'Person',
+        name: developerInfo.name,
+        jobTitle: developerInfo.tagline,
+        url: baseUrl,
+      },
+    });
+    document.head.appendChild(ld);
+  }, [fullTitle, fullDescription, fullUrl, image, type, noindex, baseUrl]);
 
   return null;
 }
