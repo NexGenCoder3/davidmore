@@ -25,7 +25,7 @@ const cols = ['Typical Dev', 'Senior Dev', 'David More'] as const;
 
 export function FeatureComparison() {
   return (
-    <section className="relative py-16 md:py-24 px-4 sm:px-6 lg:px-8">
+    <section className="relative py-16 md:section-y px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 16 }}

@@ -188,7 +188,7 @@ export default function Home() {
         <MarketingShowcase />
 
         <SectionDivider />
-        <section className="py-16 md:py-24 lg:py-32 px-4 md:px-6 lg:px-8 bg-background">
+        <section className="py-16 md:section-y lg:section-y px-4 md:px-6 lg:px-8 bg-background">
           <motion.div
             className="max-w-4xl mx-auto text-center space-y-6 md:space-y-8"
             variants={stagger}
@@ -216,7 +216,7 @@ export default function Home() {
         </section>
 
         <SectionDivider />
-        <section className="py-16 md:py-24 lg:py-32">
+        <section className="py-16 md:section-y lg:section-y">
           <motion.div
             className="text-center mb-10 md:mb-16 space-y-3 md:space-y-4 px-4 md:px-6"
             variants={stagger}
@@ -231,7 +231,7 @@ export default function Home() {
         </section>
 
         <SectionDivider />
-        <section className="py-16 md:py-24 lg:py-32">
+        <section className="py-16 md:section-y lg:section-y">
           <motion.div
             className="text-center mb-10 md:mb-16 space-y-3 md:space-y-4 px-4 md:px-6"
             variants={stagger}
@@ -258,7 +258,7 @@ export default function Home() {
         </section>
 
         <SectionDivider />
-        <section className="py-16 md:py-24 lg:py-32 bg-terminal-bg">
+        <section className="py-16 md:section-y lg:section-y bg-terminal-bg">
           <motion.div
             className="text-center mb-10 md:mb-16 space-y-3 md:space-y-4 px-4 md:px-6"
             variants={stagger}

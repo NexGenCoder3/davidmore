@@ -7,7 +7,7 @@ import { Tilt3DCard } from '@/components/effects/Tilt3DCard';
 export function TestimonialQuoteCard() {
   const t = testimonials[1] ?? testimonials[0];
   return (
-    <section className="relative py-16 md:py-24 px-4 sm:px-6 lg:px-8">
+    <section className="relative py-16 md:section-y px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <Tilt3DCard max={5} className="rounded-2xl">
           <div className="relative rounded-2xl p-[1px] bg-[conic-gradient(from_0deg,hsl(var(--primary)/0.6),transparent,hsl(var(--primary)/0.4),transparent,hsl(var(--primary)/0.6))]">

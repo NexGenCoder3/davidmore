@@ -32,7 +32,7 @@ export default function Contact() {
         </div>
 
         {/* Hero Section */}
-        <section className="relative z-10 py-16 md:py-24 lg:py-32 px-4 md:px-6 lg:px-8 border-b border-border">
+        <section className="relative z-10 py-16 md:section-y lg:section-y px-4 md:px-6 lg:px-8 border-b border-border">
           <div className="max-w-4xl mx-auto text-center space-y-4 md:space-y-6">
             <motion.div
               initial={{ opacity: 0.8, y: 10 }}
@@ -50,7 +50,7 @@ export default function Contact() {
         </section>
 
         {/* Main Content */}
-        <section className="relative z-10 py-12 md:py-16 lg:py-24 px-4 md:px-6 lg:px-8">
+        <section className="relative z-10 py-12 md:py-16 lg:section-y px-4 md:px-6 lg:px-8">
           <div className="max-w-5xl mx-auto">
             <div className="grid lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16">
               {/* Terminal Contact Form */}

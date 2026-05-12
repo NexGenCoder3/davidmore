@@ -8,7 +8,7 @@ import { developerInfo } from '@/data/developer';
 
 export function HeroPoster() {
   return (
-    <section className="relative py-16 md:py-24 px-4 sm:px-6 lg:px-8">
+    <section className="relative py-16 md:section-y px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         <Tilt3DCard max={4} className="rounded-2xl">
           <div className="relative overflow-hidden rounded-2xl border border-primary/25 bg-black/50 backdrop-blur-xl shadow-[0_0_60px_rgba(34,197,94,0.15),inset_0_1px_0_rgba(255,255,255,0.04)]">
