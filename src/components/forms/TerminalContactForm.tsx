@@ -282,11 +282,13 @@ export function TerminalContactForm() {
               ) : (
                 <input
                   ref={inputRef}
-                  type={step === 'email' ? 'email' : 'text'}
+                  type={step === 'email' ? 'email' : step === 'type' ? 'tel' : 'text'}
+                  inputMode={step === 'email' ? 'email' : step === 'type' ? 'numeric' : 'text'}
+                  enterKeyHint={step === 'message' ? 'send' : 'next'}
                   value={currentInput}
                   onChange={(e) => setCurrentInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  className="flex-1 bg-transparent border-none outline-none text-hacker-green caret-hacker-green-glow placeholder:text-hacker-green/30"
+                  className="flex-1 bg-transparent border-none outline-none text-hacker-green caret-hacker-green-glow placeholder:text-hacker-green/30 text-base"
                   maxLength={step === 'email' ? 255 : 100}
                   placeholder={step === 'type' ? '1, 2, or 3' : ''}
                   aria-label={getPrompt()}
