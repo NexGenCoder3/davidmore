@@ -1,85 +1,80 @@
-# Plan: Security hardening, portrait swap, button refresh, polish pass
 
-## 1. Replace portrait image (camera/woman → suit photo)
+## Goals
 
-- Copy `user-uploads://file_000000000858720aba3a870c39cf9bc0.png` into `src/assets/portrait.png`.
-- Update `src/data/developer.ts` → `portraitImage` to the imported asset.
-- Verify `About.tsx` and `SEOHead` pick it up with no other Unsplash references left.
+1. Fix the "curved buttons" regression — they're too small, low-contrast, and visually merge into the terminal background.
+2. Make the mobile contact form sendable via the phone keyboard's Enter/Go key (no need to tap "Send [Ctrl+Enter]").
+3. Raise overall UI quality: motion-graphics polish on every page, tighter spacing, no dead whitespace, full responsive parity.
 
-## 2. Contact form abuse protection
+## 1. Button system rebuild (`src/components/ui/button.tsx`)
 
-EmailJS credentials live in the client bundle by design (EmailJS public keys are allow-listed by domain), but bots can still drain the quota. We will layer ad‑hoc client-side defences. **Note:** Lovable's backend has no proper rate-limiting primitives, so true per-IP throttling is not part of this plan — I'll flag this clearly. If you want server-side enforcement later, the right move is to migrate the send through a Lovable Cloud edge function.
+Problem: Last pass turned default buttons into low-contrast pills that disappear against dark glass.
 
-Changes to `src/components/forms/TerminalContactForm.tsx` (and `ContactForm.tsx`):
+- Restore proper sizing: `default` h-11 px-6, `lg` h-12 px-8, `sm` h-9 px-4, `icon` size-10. Min `min-w-[44px]` for tap targets.
+- Keep `rounded-full` but bump weight to `font-semibold tracking-tight`.
+- `default` variant: solid `bg-hacker-green text-black` with `shadow-[0_0_0_1px_hsl(var(--hacker-green)/0.6),0_8px_28px_-8px_hsl(var(--hacker-green)/0.55)]`, hover lifts shadow and brightens.
+- `outline` variant: `border-2 border-hacker-green/70 text-hacker-green bg-black/40 backdrop-blur-md hover:bg-hacker-green/15` — must remain visible on dark glass.
+- `ghost` and `link` get readable contrast tokens.
+- `glow` variant kept but contrast-checked against terminal panel bg.
+- Add `:focus-visible` ring `ring-2 ring-hacker-green ring-offset-2 ring-offset-background`.
+- Audit terminal "Send [Ctrl+Enter]" pill in `TerminalContactForm.tsx` — replace with new outline variant so it's clearly visible.
 
-- **Honeypot field**: hidden `<input name="website">` with `tabIndex={-1}`, `autoComplete="off"`, `aria-hidden`. If filled, silently "succeed" without sending.
-- **Time-trap**: record mount timestamp; reject submissions completed in < 3 s.
-- **Per-browser cooldown**: localStorage key `contact:lastSent`. Block resubmits within 60 s and limit to 3 sends per 24 h. Show a friendly terminal line `ERROR: cooldown active (Xs remaining)`.
-- **Cloudflare Turnstile (invisible)**: add `@marsidev/react-turnstile` and render an invisible widget. Submit only fires after a token is returned. Site key stored as `VITE_TURNSTILE_SITE_KEY` (publishable, safe in bundle). Token is sent as `turnstile_token` template param so EmailJS receives it (validation is soft — without a backend we can't verify, but the widget itself blocks most bots).
-- **Input hardening**: tighten zod regex (no URLs in `name`, max consecutive whitespace, strip control chars). Reject messages with > 3 URLs.
+## 2. Mobile Enter-to-send for contact form (`src/components/forms/TerminalContactForm.tsx`)
 
-I'll mention the no-backend-rate-limiting caveat in the response and offer to follow up with a proper edge-function-based send + Turnstile verification.
+Problem: textarea only submits on Ctrl+Enter; mobile keyboards can't send Ctrl, so the user must hunt for a button.
 
-## 3. Curvier, more modern buttons (SaaS/dev tone)
+- Detect mobile via existing `useMediaQuery`/`use-mobile` hook.
+- On mobile: replace the textarea's "Enter = newline" behavior with `Enter = submit`, and offer a small "↵ newline" hint plus `Shift+Enter` for newline (works on most mobile keyboards with shift).
+- Set `enterKeyHint="send"` on the textarea so mobile keyboards render a "Send" key label.
+- Set `inputMode` properly on each step (`email`, `numeric` for type select).
+- Keep the visible "Send" button as a fallback, but enlarge it (h-11, full-width on mobile) using the new button system.
+- Also wire `<form onSubmit>` semantics on inputs so the keyboard "Go"/"Done" key naturally submits.
 
-- `src/components/ui/button.tsx`:
-  - Base radius `rounded-md` → `rounded-full` for `default`/`secondary`/`destructive`, `rounded-2xl` for `outline`.
-  - Add `font-medium tracking-tight`, subtle `shadow-[0_0_0_1px_rgba(34,197,94,0.15),0_8px_24px_-12px_rgba(34,197,94,0.4)]` on default.
-  - Add `hover:scale-[1.02] active:scale-[0.98] transition-all duration-200`.
-  - New gradient variant `glow`: `bg-gradient-to-b from-hacker-green to-hacker-green/80 text-black hover:shadow-[0_0_24px_rgba(34,197,94,0.45)]`.
-  - Sizes: `h-10` → `h-11` for default, `lg` → `h-12 px-9`, `sm` → `h-9 px-4`.
-- Audit ad-hoc buttons (terminal "Send [Ctrl+Enter]", category filter chips, hero CTAs) to use `rounded-full` and the new glow variant where they are primary.
+## 3. Global UI polish + motion graphics
 
-## 4. Reverse-engineered polish (bugs visible in screenshots)
+Scope: every page (Home, About, Portfolio, ProjectDetail, Skills, Resume, Blog, BlogPost, Contact, Accessibility, NotFound).
 
-```text
-[About page mobile]   white gradient band above portrait — caused by
-                      vignette pulse leaking into the section. Fix by
-                      scoping the radial gradient to the hero only.
-[Portfolio mobile]    "12+" stat is clipped — fixed-height card cuts the
-                      counter. Switch to min-h + py to allow growth.
-[Header mobile]       "Available" pill + theme + menu overflow at 360px.
-                      Hide pill < sm:, show small green dot instead.
-[Filter chips]        Touch targets < 40px on mobile. Bump to h-10 and
-                      rounded-full for parity with new button system.
-[Command terminal]    Toggle button overlaps Portfolio "+N" badge. Move
-                      to bottom-28 on mobile, keep bottom-24 desktop.
-[Layout]              Some pages still allow horizontal scroll on iOS.
-                      Add overscroll-behavior-x: contain on body.
-```
+- Standardize section spacing tokens in `src/index.css`:
+  - `--section-y-mobile: 3rem`, `--section-y-desktop: 5rem`
+  - utility class `.section-y` → `py-12 md:py-20`
+- Sweep pages and replace ad-hoc `py-24/py-32` with `.section-y`; collapse stacked empty `<div>` spacers.
+- Tighten container: standardize on `container mx-auto px-4 md:px-6 lg:px-8 max-w-6xl` everywhere via a shared `<Section>` wrapper component (new: `src/components/layout/Section.tsx`).
+- Motion graphics layer (framer-motion, already installed):
+  - Shared `FadeUp`, `StaggerGroup`, `Reveal` primitives in `src/components/effects/Motion.tsx`.
+  - Apply `whileInView` reveal on every section heading + first content row; `viewport={{ once: true, margin: '-10%' }}`.
+  - Add subtle parallax on hero blocks of About / Portfolio / Skills / Blog pages (translateY on scroll, ≤ 30px, disabled under `prefers-reduced-motion`).
+  - Card hover micro-interaction (lift + green glow ring) standardized via a `.card-interactive` class.
+- Keep the existing global `Scene3D` cinematic background; ensure pages don't paint opaque blocks over it (audit `bg-background` walls; switch large containers to `bg-background/60 backdrop-blur-xl` glass).
 
-## 5. GitHub sync
+## 4. Responsive QA + spacing audit
 
-Git is managed by Lovable automatically — every change in this loop is committed and pushed to your connected GitHub repo. No manual sync needed. I'll confirm in the final response.
+Viewports to verify with browser tools after build: 360, 390, 414, 768, 820, 1024, 1280, 1440.
 
-## Technical details
+Checklist per viewport:
+- No horizontal scroll
+- Header fits, terminal toggle doesn't overlap content/footer
+- Stat counters not clipped
+- Marketing posters (Hero / FeatureComparison / Testimonial) reflow cleanly
+- Contact terminal: keyboard "Send" works, Turnstile widget not overflowing
+- Footer uptime bar visible, not overlapped by Lovable badge
 
-**New deps**: `@marsidev/react-turnstile` (~3 kB).
+Fix any issues found in the same pass.
 
-**New env (publishable, safe to commit)**:
-```
-VITE_TURNSTILE_SITE_KEY=<your Cloudflare Turnstile site key>
-```
-I'll wire the component to render only when the env var is set, so the form keeps working in dev without a key (honeypot + time-trap + cooldown still apply).
+## 5. Out of scope
 
-**Files to be created**
-- `src/assets/portrait.png` (copied from upload)
-- `src/hooks/useContactGuard.ts` (honeypot + time-trap + cooldown helpers)
+- No backend / EmailJS / Turnstile config changes (server route already hardened last turn).
+- No new pages or routes.
+- No content rewrites — visual + interaction polish only.
 
-**Files to be edited**
-- `src/data/developer.ts`
-- `src/components/forms/TerminalContactForm.tsx`
-- `src/components/forms/ContactForm.tsx`
-- `src/components/ui/button.tsx`
-- `src/components/portfolio/CategoryFilter.tsx`
-- `src/components/portfolio/StatsCounter.tsx`
-- `src/components/layout/Header.tsx`
-- `src/components/effects/CommandTerminal.tsx`
-- `src/index.css` (overscroll, scoped vignette)
-- `.env.example`
+## Files
 
-**What I will NOT do**
-- Backend/IP rate limiting (no primitives available — would be ad-hoc and ineffective).
-- Server-side Turnstile token verification (requires the edge-function migration mentioned above; happy to do as a follow-up if you confirm).
+**New**
+- `src/components/layout/Section.tsx` — shared section wrapper
+- `src/components/effects/Motion.tsx` — FadeUp/Stagger/Reveal primitives
 
-After implementation I'll run the existing Vitest suite and verify the About + Portfolio + Contact pages at 360, 768, and 1280 widths.
+**Edited**
+- `src/components/ui/button.tsx` — sizing + contrast restoration
+- `src/components/forms/TerminalContactForm.tsx` — mobile Enter-to-send, enterKeyHint, larger send button
+- `src/components/forms/ContactForm.tsx` — enterKeyHint on submit
+- `src/index.css` — spacing tokens, glass utilities, motion-safe rules
+- All `src/pages/*.tsx` — adopt `<Section>`, apply motion primitives, remove dead spacing
+- `src/components/layout/Footer.tsx`, `Header.tsx` — spacing tightening if needed

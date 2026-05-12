@@ -234,18 +234,25 @@ export function TerminalContactForm() {
             <div className="flex items-start gap-2">
               <span className="text-hacker-green mt-1">{'>'}</span>
               {step === 'message' ? (
-                <div className="flex-1 flex flex-col gap-2">
+                <div className="flex-1 flex flex-col gap-3">
                   <textarea
                     ref={textareaRef}
                     value={currentInput}
                     onChange={(e) => setCurrentInput(e.target.value)}
                     onKeyDown={(e) => {
-                      if (e.key === 'Enter' && e.ctrlKey) {
+                      // Ctrl/Cmd+Enter always sends (desktop power users).
+                      // On touch devices, plain Enter also sends; Shift+Enter inserts newline.
+                      const isTouch = typeof window !== 'undefined' && window.matchMedia?.('(pointer: coarse)').matches;
+                      if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                        e.preventDefault();
+                        handleSubmitStep();
+                      } else if (e.key === 'Enter' && !e.shiftKey && isTouch) {
                         e.preventDefault();
                         handleSubmitStep();
                       }
                     }}
-                    className="flex-1 bg-transparent border-none outline-none text-hacker-green caret-hacker-green-glow resize-none min-h-[80px] placeholder:text-hacker-green/30"
+                    enterKeyHint="send"
+                    className="flex-1 bg-transparent border-none outline-none text-hacker-green caret-hacker-green-glow resize-none min-h-[96px] placeholder:text-hacker-green/30 text-base"
                     maxLength={1000}
                     placeholder="Type your message..."
                     aria-label="Message"
@@ -264,20 +271,24 @@ export function TerminalContactForm() {
                     </div>
                   )}
                   <button
+                    type="button"
                     onClick={handleSubmitStep}
-                    className="self-end text-xs px-4 py-1.5 rounded-full border border-hacker-green/30 text-hacker-green/80 hover:bg-hacker-green/10 hover:border-hacker-green/60 transition-all"
+                    className="w-full sm:w-auto sm:self-end h-11 px-6 rounded-full bg-hacker-green text-black font-semibold tracking-tight shadow-[0_0_0_1px_hsl(142_70%_45%/0.6),0_10px_28px_-8px_hsl(142_70%_45%/0.55)] hover:shadow-[0_0_32px_hsl(142_90%_55%/0.6)] hover:brightness-110 active:scale-[0.98] transition-all"
                   >
-                    Send [Ctrl+Enter]
+                    Send message
                   </button>
+                  <p className="text-[10px] text-hacker-green/40 text-right hidden sm:block">↵ to send · Shift+↵ for newline</p>
                 </div>
               ) : (
                 <input
                   ref={inputRef}
-                  type={step === 'email' ? 'email' : 'text'}
+                  type={step === 'email' ? 'email' : step === 'type' ? 'tel' : 'text'}
+                  inputMode={step === 'email' ? 'email' : step === 'type' ? 'numeric' : 'text'}
+                  enterKeyHint="next"
                   value={currentInput}
                   onChange={(e) => setCurrentInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  className="flex-1 bg-transparent border-none outline-none text-hacker-green caret-hacker-green-glow placeholder:text-hacker-green/30"
+                  className="flex-1 bg-transparent border-none outline-none text-hacker-green caret-hacker-green-glow placeholder:text-hacker-green/30 text-base"
                   maxLength={step === 'email' ? 255 : 100}
                   placeholder={step === 'type' ? '1, 2, or 3' : ''}
                   aria-label={getPrompt()}
