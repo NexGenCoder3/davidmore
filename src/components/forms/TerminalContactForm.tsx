@@ -284,7 +284,7 @@ export function TerminalContactForm() {
                   ref={inputRef}
                   type={step === 'email' ? 'email' : step === 'type' ? 'tel' : 'text'}
                   inputMode={step === 'email' ? 'email' : step === 'type' ? 'numeric' : 'text'}
-                  enterKeyHint={step === 'message' ? 'send' : 'next'}
+                  enterKeyHint="next"
                   value={currentInput}
                   onChange={(e) => setCurrentInput(e.target.value)}
                   onKeyDown={handleKeyDown}
