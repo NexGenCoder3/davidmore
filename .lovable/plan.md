@@ -1,57 +1,28 @@
-## About Page Refresh — Cinematic Glass Style
+## Goal
+Add a user-facing toggle to enable/disable the global `Scene3D` cinematic background, with sensible defaults that respect `prefers-reduced-motion`, touch/low-power, and missing WebGL.
 
-The `/about` route already exists (`src/pages/About.tsx`) and is wired in `App.tsx`, but it currently uses a flat editorial layout (plain image + text columns, `bg-muted`, basic separators). It doesn't match the cinematic glass + monochrome-green hacker aesthetic used on Home (HeroPoster, FeatureComparison, TestimonialQuoteCard, GlassCard, TiltCard, Scene3D backdrop).
+## Changes
 
-This plan rebuilds `/about` as a true cinematic page with a clear value proposition.
+1. **New hook** `src/hooks/useScene3DPreference.ts`
+   - Mirrors `useCursorPreference` shape: `{ pref: 'auto' | 'on' | 'off', enabled, toggle, setPref }`.
+   - Persists to `localStorage` under `scene3d-pref`.
+   - `'auto'` (default) runs the existing capability checks (reduced-motion, touch+small/low-cpu, WebGL probe) and resolves to on/off.
+   - `'on'` forces on (still blocked only if WebGL is unavailable).
+   - `'off'` forces off.
 
-### Goals
-- Match site's visual language: glass surfaces, green accents, terminal/mono touches, motion reveals.
-- Lead with a sharp **value proposition** above the fold (who David is, what he builds, the outcome for clients).
-- Keep performance-safe (reuse existing effects; no new heavy 3D).
+2. **Refactor** `src/components/effects/Scene3D.tsx`
+   - Replace the local `enabled` state with `useScene3DPreference().enabled`.
+   - Keep the same lazy/Suspense render path; no visual change when enabled.
 
-### Page structure
+3. **UI toggle** in `src/components/effects/StatusWidget.tsx`
+   - Add a sibling pill next to the existing cursor toggle: `3d: [auto|on|off]`.
+   - Click cycles `auto → on → off → auto`.
+   - Same glass styling, same `hidden lg:flex` container (desktop only, matching the existing widget — mobile keeps the auto default for performance).
 
-1. **Hero / Value Prop Section**
-   - `TypingEffect` headline: "Building cinematic, production-grade web experiences."
-   - Sub-line value prop (1–2 sentences) pulled/refined from `developerInfo.heroIntroduction`.
-   - Terminal-style status chip: `~/about $ whoami` → "david.more — software engineer"
-   - `FadeUp` reveals; respects reduced motion.
+4. **Test** `src/hooks/useScene3DPreference.test.ts`
+   - Default is `'auto'`, toggle cycles through the three states and persists.
 
-2. **Portrait + Identity Card** (glass)
-   - `GlassCard` + `TiltCard` wrapping the portrait (`developerInfo.portraitImage`).
-   - Beside it: name, tagline, location, availability, email, GitHub — all inside a sibling glass card with mono labels (`location:`, `email:`, `status:`).
-
-3. **What I Do — 3 Value Pillars** (glass grid)
-   - Three `GlassCard`s in a responsive grid (1 / 2 / 3 cols):
-     - **Front-End Engineering** — React, TypeScript, Vite, Tailwind.
-     - **Cinematic UI** — motion, glass, 3D, micro-interactions.
-     - **Ship-Ready Quality** — accessibility, performance, SEO.
-   - Each card: icon (lucide), short title, 1-sentence outcome-focused copy.
-   - `StaggerGroup` for entrance.
-
-4. **Approach / Philosophy** (split)
-   - Left: heading "How I work".
-   - Right: paragraphs from `developerInfo.approach`.
-   - Subtle glass panel background.
-
-5. **Bio / Background** (glass)
-   - `developerInfo.biography` paragraphs inside a single wide glass card.
-   - Education + location chips at the bottom.
-
-6. **CTA Footer Section**
-   - Glass band with two buttons: "View Portfolio" (`/portfolio`) + "Start a Project" (`/contact`).
-   - Uses existing `Button` variants (`default`, `outline`).
-
-### Technical details
-- File to rewrite: `src/pages/About.tsx`.
-- Reuse: `GlassCard`, `TiltCard`, `FadeUp`, `StaggerGroup`, `TypingEffect`, `SEOHead`, `Button`, lucide icons.
-- No new dependencies. No changes to `Layout` (Scene3D already mounted globally).
-- Semantic tokens only (no hard-coded colors); green accent via existing `hacker-green` / `primary` tokens.
-- Single `<h1>` in hero; `<h2>` for each section. Alt text on portrait.
-- `SEOHead` already configured for About — keep, just refine description to highlight value prop.
-- Container: `max-w-6xl mx-auto px-4 md:px-6 lg:px-8`; tighten vertical spacing (`py-16 md:py-20`) to match standardized spacing rule.
-- Responsive: stack on mobile, 2-col tablet where natural, full layout desktop. Mobile-first padding/typography scales.
-
-### Out of scope
-- No backend, no new data sources, no route changes.
-- No edits to Home, Layout, or shared components.
+## Notes
+- No new dependencies.
+- Reduced-motion and low-power still win by default (`auto`), so the toggle is purely opt-in for users who want to force the effect on or off.
+- Does not touch `Layout.tsx`; `<Scene3D />` stays mounted and self-gates internally.
