@@ -4,6 +4,7 @@ import { ArrowRight, Sparkles } from 'lucide-react';
 import { LetterReveal } from '@/components/effects/LetterReveal';
 import { MagneticButton } from '@/components/effects/MagneticButton';
 import { Tilt3DCard } from '@/components/effects/Tilt3DCard';
+import { Button } from '@/components/ui/button';
 import { developerInfo } from '@/data/developer';
 
 export function HeroPoster() {
