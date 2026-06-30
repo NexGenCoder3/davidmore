@@ -1,80 +1,57 @@
+## About Page Refresh — Cinematic Glass Style
 
-## Goals
+The `/about` route already exists (`src/pages/About.tsx`) and is wired in `App.tsx`, but it currently uses a flat editorial layout (plain image + text columns, `bg-muted`, basic separators). It doesn't match the cinematic glass + monochrome-green hacker aesthetic used on Home (HeroPoster, FeatureComparison, TestimonialQuoteCard, GlassCard, TiltCard, Scene3D backdrop).
 
-1. Fix the "curved buttons" regression — they're too small, low-contrast, and visually merge into the terminal background.
-2. Make the mobile contact form sendable via the phone keyboard's Enter/Go key (no need to tap "Send [Ctrl+Enter]").
-3. Raise overall UI quality: motion-graphics polish on every page, tighter spacing, no dead whitespace, full responsive parity.
+This plan rebuilds `/about` as a true cinematic page with a clear value proposition.
 
-## 1. Button system rebuild (`src/components/ui/button.tsx`)
+### Goals
+- Match site's visual language: glass surfaces, green accents, terminal/mono touches, motion reveals.
+- Lead with a sharp **value proposition** above the fold (who David is, what he builds, the outcome for clients).
+- Keep performance-safe (reuse existing effects; no new heavy 3D).
 
-Problem: Last pass turned default buttons into low-contrast pills that disappear against dark glass.
+### Page structure
 
-- Restore proper sizing: `default` h-11 px-6, `lg` h-12 px-8, `sm` h-9 px-4, `icon` size-10. Min `min-w-[44px]` for tap targets.
-- Keep `rounded-full` but bump weight to `font-semibold tracking-tight`.
-- `default` variant: solid `bg-hacker-green text-black` with `shadow-[0_0_0_1px_hsl(var(--hacker-green)/0.6),0_8px_28px_-8px_hsl(var(--hacker-green)/0.55)]`, hover lifts shadow and brightens.
-- `outline` variant: `border-2 border-hacker-green/70 text-hacker-green bg-black/40 backdrop-blur-md hover:bg-hacker-green/15` — must remain visible on dark glass.
-- `ghost` and `link` get readable contrast tokens.
-- `glow` variant kept but contrast-checked against terminal panel bg.
-- Add `:focus-visible` ring `ring-2 ring-hacker-green ring-offset-2 ring-offset-background`.
-- Audit terminal "Send [Ctrl+Enter]" pill in `TerminalContactForm.tsx` — replace with new outline variant so it's clearly visible.
+1. **Hero / Value Prop Section**
+   - `TypingEffect` headline: "Building cinematic, production-grade web experiences."
+   - Sub-line value prop (1–2 sentences) pulled/refined from `developerInfo.heroIntroduction`.
+   - Terminal-style status chip: `~/about $ whoami` → "david.more — software engineer"
+   - `FadeUp` reveals; respects reduced motion.
 
-## 2. Mobile Enter-to-send for contact form (`src/components/forms/TerminalContactForm.tsx`)
+2. **Portrait + Identity Card** (glass)
+   - `GlassCard` + `TiltCard` wrapping the portrait (`developerInfo.portraitImage`).
+   - Beside it: name, tagline, location, availability, email, GitHub — all inside a sibling glass card with mono labels (`location:`, `email:`, `status:`).
 
-Problem: textarea only submits on Ctrl+Enter; mobile keyboards can't send Ctrl, so the user must hunt for a button.
+3. **What I Do — 3 Value Pillars** (glass grid)
+   - Three `GlassCard`s in a responsive grid (1 / 2 / 3 cols):
+     - **Front-End Engineering** — React, TypeScript, Vite, Tailwind.
+     - **Cinematic UI** — motion, glass, 3D, micro-interactions.
+     - **Ship-Ready Quality** — accessibility, performance, SEO.
+   - Each card: icon (lucide), short title, 1-sentence outcome-focused copy.
+   - `StaggerGroup` for entrance.
 
-- Detect mobile via existing `useMediaQuery`/`use-mobile` hook.
-- On mobile: replace the textarea's "Enter = newline" behavior with `Enter = submit`, and offer a small "↵ newline" hint plus `Shift+Enter` for newline (works on most mobile keyboards with shift).
-- Set `enterKeyHint="send"` on the textarea so mobile keyboards render a "Send" key label.
-- Set `inputMode` properly on each step (`email`, `numeric` for type select).
-- Keep the visible "Send" button as a fallback, but enlarge it (h-11, full-width on mobile) using the new button system.
-- Also wire `<form onSubmit>` semantics on inputs so the keyboard "Go"/"Done" key naturally submits.
+4. **Approach / Philosophy** (split)
+   - Left: heading "How I work".
+   - Right: paragraphs from `developerInfo.approach`.
+   - Subtle glass panel background.
 
-## 3. Global UI polish + motion graphics
+5. **Bio / Background** (glass)
+   - `developerInfo.biography` paragraphs inside a single wide glass card.
+   - Education + location chips at the bottom.
 
-Scope: every page (Home, About, Portfolio, ProjectDetail, Skills, Resume, Blog, BlogPost, Contact, Accessibility, NotFound).
+6. **CTA Footer Section**
+   - Glass band with two buttons: "View Portfolio" (`/portfolio`) + "Start a Project" (`/contact`).
+   - Uses existing `Button` variants (`default`, `outline`).
 
-- Standardize section spacing tokens in `src/index.css`:
-  - `--section-y-mobile: 3rem`, `--section-y-desktop: 5rem`
-  - utility class `.section-y` → `py-12 md:py-20`
-- Sweep pages and replace ad-hoc `py-24/py-32` with `.section-y`; collapse stacked empty `<div>` spacers.
-- Tighten container: standardize on `container mx-auto px-4 md:px-6 lg:px-8 max-w-6xl` everywhere via a shared `<Section>` wrapper component (new: `src/components/layout/Section.tsx`).
-- Motion graphics layer (framer-motion, already installed):
-  - Shared `FadeUp`, `StaggerGroup`, `Reveal` primitives in `src/components/effects/Motion.tsx`.
-  - Apply `whileInView` reveal on every section heading + first content row; `viewport={{ once: true, margin: '-10%' }}`.
-  - Add subtle parallax on hero blocks of About / Portfolio / Skills / Blog pages (translateY on scroll, ≤ 30px, disabled under `prefers-reduced-motion`).
-  - Card hover micro-interaction (lift + green glow ring) standardized via a `.card-interactive` class.
-- Keep the existing global `Scene3D` cinematic background; ensure pages don't paint opaque blocks over it (audit `bg-background` walls; switch large containers to `bg-background/60 backdrop-blur-xl` glass).
+### Technical details
+- File to rewrite: `src/pages/About.tsx`.
+- Reuse: `GlassCard`, `TiltCard`, `FadeUp`, `StaggerGroup`, `TypingEffect`, `SEOHead`, `Button`, lucide icons.
+- No new dependencies. No changes to `Layout` (Scene3D already mounted globally).
+- Semantic tokens only (no hard-coded colors); green accent via existing `hacker-green` / `primary` tokens.
+- Single `<h1>` in hero; `<h2>` for each section. Alt text on portrait.
+- `SEOHead` already configured for About — keep, just refine description to highlight value prop.
+- Container: `max-w-6xl mx-auto px-4 md:px-6 lg:px-8`; tighten vertical spacing (`py-16 md:py-20`) to match standardized spacing rule.
+- Responsive: stack on mobile, 2-col tablet where natural, full layout desktop. Mobile-first padding/typography scales.
 
-## 4. Responsive QA + spacing audit
-
-Viewports to verify with browser tools after build: 360, 390, 414, 768, 820, 1024, 1280, 1440.
-
-Checklist per viewport:
-- No horizontal scroll
-- Header fits, terminal toggle doesn't overlap content/footer
-- Stat counters not clipped
-- Marketing posters (Hero / FeatureComparison / Testimonial) reflow cleanly
-- Contact terminal: keyboard "Send" works, Turnstile widget not overflowing
-- Footer uptime bar visible, not overlapped by Lovable badge
-
-Fix any issues found in the same pass.
-
-## 5. Out of scope
-
-- No backend / EmailJS / Turnstile config changes (server route already hardened last turn).
-- No new pages or routes.
-- No content rewrites — visual + interaction polish only.
-
-## Files
-
-**New**
-- `src/components/layout/Section.tsx` — shared section wrapper
-- `src/components/effects/Motion.tsx` — FadeUp/Stagger/Reveal primitives
-
-**Edited**
-- `src/components/ui/button.tsx` — sizing + contrast restoration
-- `src/components/forms/TerminalContactForm.tsx` — mobile Enter-to-send, enterKeyHint, larger send button
-- `src/components/forms/ContactForm.tsx` — enterKeyHint on submit
-- `src/index.css` — spacing tokens, glass utilities, motion-safe rules
-- All `src/pages/*.tsx` — adopt `<Section>`, apply motion primitives, remove dead spacing
-- `src/components/layout/Footer.tsx`, `Header.tsx` — spacing tightening if needed
+### Out of scope
+- No backend, no new data sources, no route changes.
+- No edits to Home, Layout, or shared components.
