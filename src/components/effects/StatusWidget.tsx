@@ -28,6 +28,7 @@ export function StatusWidget() {
 
   const message = statusMessages[currentIndex];
   const { pref, toggle } = useCursorPreference();
+  const { pref: scenePref, cycle: cycleScene } = useScene3DPreference();
 
   return (
     <div className="fixed bottom-6 left-6 z-40 hidden lg:flex flex-col gap-2 items-start">
@@ -46,14 +47,24 @@ export function StatusWidget() {
           </motion.div>
         </AnimatePresence>
       </div>
-      <button
-        type="button"
-        onClick={toggle}
-        aria-label={`Toggle custom cursor (currently ${pref})`}
-        className="rounded-full px-3 py-1 bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] font-mono text-[10px] text-hacker-green/70 hover:text-hacker-green hover:border-primary/40 transition-colors"
-      >
-        cursor: [{pref === 'on' ? 'custom' : 'native'}]
-      </button>
+      <div className="flex gap-2">
+        <button
+          type="button"
+          onClick={toggle}
+          aria-label={`Toggle custom cursor (currently ${pref})`}
+          className="rounded-full px-3 py-1 bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] font-mono text-[10px] text-hacker-green/70 hover:text-hacker-green hover:border-primary/40 transition-colors"
+        >
+          cursor: [{pref === 'on' ? 'custom' : 'native'}]
+        </button>
+        <button
+          type="button"
+          onClick={cycleScene}
+          aria-label={`Toggle 3D background (currently ${scenePref})`}
+          className="rounded-full px-3 py-1 bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] font-mono text-[10px] text-hacker-green/70 hover:text-hacker-green hover:border-primary/40 transition-colors"
+        >
+          3d: [{scenePref}]
+        </button>
+      </div>
     </div>
   );
 }
