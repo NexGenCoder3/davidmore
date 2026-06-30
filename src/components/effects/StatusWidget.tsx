@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCursorPreference } from '@/hooks/useCursorPreference';
+import { useScene3DPreference } from '@/hooks/useScene3DPreference';
 
 const statusMessages = [
   { text: 'Compiling portfolio... ██████ 100%', icon: '⚡' },
