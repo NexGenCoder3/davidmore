@@ -59,22 +59,18 @@ export function HeroPoster() {
  transition={{ delay: 1.0 }}
  className="flex flex-wrap gap-3 pt-2"
  >
- <MagneticButton>
- <Link
- to="/portfolio"
- className="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-primary text-primary-foreground font-medium shadow-[0_0_24px_rgba(34,197,94,0.35)] hover:shadow-[0_0_32px_rgba(34,197,94,0.55)] transition-shadow"
- >
- View Work <ArrowRight className="size-4" />
- </Link>
- </MagneticButton>
- <MagneticButton>
- <Link
- to="/contact"
- className="inline-flex items-center gap-2 px-5 py-3 rounded-lg border border-primary/40 text-primary hover:bg-primary/10 transition-colors font-mono"
- >
- $ hire-me
- </Link>
- </MagneticButton>
+                <MagneticButton>
+                  <Button asChild variant="glow" size="lg">
+                    <Link to="/portfolio">
+                      View Work <ArrowRight className="size-4" />
+                    </Link>
+                  </Button>
+                </MagneticButton>
+                <MagneticButton>
+                  <Button asChild variant="outline" size="lg" className="font-mono">
+                    <Link to="/contact">$ hire-me</Link>
+                  </Button>
+                </MagneticButton>
  </motion.div>
  </div>
 
