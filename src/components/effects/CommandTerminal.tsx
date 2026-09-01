@@ -142,7 +142,7 @@ export function CommandTerminal() {
             const idx = Number(second);
             const project = projects[idx - 1];
             if (project) {
-              navigate(`/portfolio/${project.slug ?? project.id}`);
+              navigate(`/project/${project.slug}`);
               output = [`Opening project: ${project.title}`];
             } else {
               navigate('/portfolio');
@@ -152,7 +152,7 @@ export function CommandTerminal() {
             const idx = Number(second);
             const post = blogPosts[idx - 1];
             if (post) {
-              navigate(`/blog/${post.slug ?? post.id}`);
+              navigate(`/blog/${post.slug}`);
               output = [`Opening post: ${post.title}`];
             } else {
               navigate('/blog');
@@ -182,8 +182,8 @@ export function CommandTerminal() {
         case 'open': {
           const target = args.toLowerCase();
           const links: Record<string, string | undefined> = {
-            github: developerInfo.github,
-            linkedin: developerInfo.linkedin,
+            github: developerInfo.socialLinks?.github,
+            linkedin: developerInfo.socialLinks?.linkedin,
             email: `mailto:${developerInfo.email}`,
           };
           const url = links[target];
